@@ -1,0 +1,19 @@
+h1 {
+  font-family: sans-serif;
+}
+
+p code {
+  font-size: 1.2em;
+}
+
+form {
+  margin-bottom: 1em;
+}
+
+form .input-group {
+  margin-bottom: 1em;
+}
+
+form#form input[type="submit"] {
+  font-size: 18px;
+}
