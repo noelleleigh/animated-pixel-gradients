@@ -1,6 +1,6 @@
 /* eslint-env browser */
-import GIF from '../node_modules/gif.js/dist/gif'
-import '../node_modules/gif.js/dist/gif.worker'
+import GIF from 'gif.js'
+import 'gif.js/dist/gif.worker'
 
 /**
  * Using an inital `state` containing a `ctx` property pointing to a `CanvasRenderingContext2D`,

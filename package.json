@@ -16,8 +16,8 @@
   "dependencies": {
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
-    "gif.js": "git+https://github.com/jnordberg/gif.js.git#6258ac58ec2d0fca17921fb01211ca8bcc4e4bbb",
-    "mainloop.js": "git+https://github.com/IceCreamYou/MainLoop.js.git#5429f54d61b65e08e85f7f666fe87c77eecf9e4d",
+    "gif.js": "^0.2.0",
+    "mainloop.js": "^1.0.4",
     "puppeteer": "^1.0.0"
   },
   "devDependencies": {
