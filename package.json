@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "test": "npm run lint && echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Noah Leigh",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^4.0.0",
@@ -34,5 +34,17 @@
     "style-loader": "^0.19.1",
     "webpack": "^3.10.0",
     "worker-loader": "^1.1.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noahleigh/animated-pixel-gradients.git"
+  },
+  "keywords": [
+    "pixel-art",
+    "gif"
+  ],
+  "bugs": {
+    "url": "https://github.com/noahleigh/animated-pixel-gradients/issues"
+  },
+  "homepage": "https://github.com/noahleigh/animated-pixel-gradients#readme"
 }
