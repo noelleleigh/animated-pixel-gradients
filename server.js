@@ -17,13 +17,7 @@ app.get('/', function (request, response) {
 
 // Tweet-making endpoint
 app.get(`/${process.env.tweetEndpoint}`, (request, response) => {
-  const puppeteer = require('puppeteer')
-  puppeteer.launch()
-    .then(browser => response.send('Puppeteer launched successfully!'))
-    .catch(err => {
-      const lines = err.message.split('\n')
-      response.status(500).send(lines.map(line => `<code>${line}</code>`).join('</br>'))
-    })
+  response.status(501).send('Twitter bot in development.')
 })
 
 // listen for requests :)
