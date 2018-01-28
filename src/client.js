@@ -1,7 +1,7 @@
 /* eslint-env browser */
 import './canvas-shadow.css'
 import './client.css'
-import MainLoop from '../node_modules/mainloop.js/build/mainloop.min.js'
+import MainLoop from 'mainloop.js'
 import makeGif from './makeGif'
 import {setupAnimationState, replaceElement, hexToRgb, formToJson} from './utils'
 import {createState, updateGenerator, drawGenerator} from './animatedGradientFuncs'
