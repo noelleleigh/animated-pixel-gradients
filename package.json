@@ -1,0 +1,38 @@
+{
+  "name": "animated-pixel-gradients",
+  "version": "1.0.0",
+  "description": "Make pixelated gradient GIFs with words",
+  "main": "server.js",
+  "scripts": {
+    "build": "webpack",
+    "serve": "node ./server.js",
+    "start": "npm run build && npm run serve",
+    "lint": "eslint .",
+    "test": "npm run lint && echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "gif.js": "git+https://github.com/jnordberg/gif.js.git#6258ac58ec2d0fca17921fb01211ca8bcc4e4bbb",
+    "mainloop.js": "git+https://github.com/IceCreamYou/MainLoop.js.git#5429f54d61b65e08e85f7f666fe87c77eecf9e4d",
+    "puppeteer": "^1.0.0"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.17",
+    "css-loader": "^0.28.9",
+    "eslint": "^4.16.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "file-loader": "^1.1.6",
+    "html-webpack-plugin": "^2.30.1",
+    "source-map-loader": "^0.2.3",
+    "style-loader": "^0.19.1",
+    "webpack": "^3.10.0",
+    "worker-loader": "^1.1.0"
+  }
+}

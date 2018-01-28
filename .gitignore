@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# Visual Studio Code
+.vscode
+
+# My build directory
+build
