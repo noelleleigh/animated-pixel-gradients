@@ -17,6 +17,7 @@
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "gif.js": "^0.2.0",
+    "helmet": "^3.10.0",
     "mainloop.js": "^1.0.4"
   },
   "devDependencies": {
