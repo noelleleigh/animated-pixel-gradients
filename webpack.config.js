@@ -1,4 +1,6 @@
+require('dotenv').config()
 const path = require('path')
+const process = require('process')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -21,11 +23,6 @@ const common = {
           'style-loader',
           'css-loader'
         ]
-      },
-      {
-        test: /\.min\.js$/,
-        use: ['source-map-loader'],
-        enforce: 'pre'
       },
       {
         test: /\.worker\.js$/,
@@ -60,22 +57,25 @@ const main = Object.assign({}, common, {
   ]
 })
 
-// const test = Object.assign({}, common, {
-//   entry: {
-//     test: './src/sandbox.js'
-//   },
-//   output: {
-//     filename: 'test.bundle.js',
-//     path: path.resolve(__dirname, 'build')
-//   },
-//   plugins: [
-//     new CleanWebpackPlugin(['build']),
-//     new HtmlWebpackPlugin({
-//       template: 'src/sandbox.html',
-//       filename: 'test.html'
-//     })
-//   ]
-// })
+const sandbox = Object.assign({}, common, {
+  entry: {
+    sandbox: './src/sandbox.js'
+  },
+  output: {
+    filename: 'sandbox.bundle.js',
+    path: path.resolve(__dirname, 'build')
+  },
+  plugins: [
+    new CleanWebpackPlugin(['build']),
+    new HtmlWebpackPlugin({
+      template: 'src/sandbox.html',
+      filename: 'sandbox.html'
+    })
+  ]
+})
 
-// module.exports = [ main, test ]
-module.exports = main
+const configs = [main]
+if (process.env.PRODUCTION === undefined) {
+  configs.push(sandbox)
+}
+module.exports = configs
