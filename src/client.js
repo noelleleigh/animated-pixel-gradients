@@ -45,7 +45,7 @@ const createPreviewAnimation = (form, containerElement) => {
     updateFunc,
     drawFunc
   } = setupAnimationState(createState, updateGenerator, drawGenerator, stateOptions)
-  replaceElement(containerElement, containerElement.children[0], initState.canvas)
+  replaceElement(containerElement, containerElement.children[0], initState.canvasFinal)
 
   MainLoop.setUpdate(updateFunc).setDraw(drawFunc).start()
 }
@@ -54,7 +54,7 @@ const createPreviewAnimation = (form, containerElement) => {
 // Get our DOM elements
 const container = document.getElementById('canvas-container')
 const form = document.getElementById('form')
-const formGif = document.getElementById('form-gif-render')
+const buttonRenderGif = document.getElementById('button-gif-render')
 const labelGifRender = document.getElementById('gif-render-progress')
 const gifLinkContainer = document.getElementById('gif-link-container')
 
@@ -74,7 +74,7 @@ form.addEventListener('submit', (event) => {
 })
 
 // Render GIF file and add a download link
-formGif.addEventListener('submit', (event) => {
+buttonRenderGif.addEventListener('click', (event) => {
   event.preventDefault()
   const stateOptions = transformFormToStateOptions(form)
   const {
@@ -85,8 +85,9 @@ formGif.addEventListener('submit', (event) => {
 
   // Display the percentage progress
   const progressHandler = (progress) => {
-    labelGifRender.textContent = `${Math.floor(progress * 100)}%`
+    labelGifRender.textContent = `Combining frames: ${Math.floor(progress * 100)}%`
   }
+
   // Create a download link to the GIF
   const finishedHandler = (blob) => {
     const downloadLink = document.createElement('a')
@@ -97,11 +98,18 @@ formGif.addEventListener('submit', (event) => {
     replaceElement(gifLinkContainer, gifLinkContainer.children[0], downloadLink)
   }
 
-  makeGif(
-    initState, updateFunc, drawFunc, 1000 / 60,
-    progressHandler,
-    finishedHandler
-  )
+  // Update GIF rendering message then create the GIF
+  requestAnimationFrame(() => {
+    gifLinkContainer.innerHTML = ''
+    labelGifRender.textContent = 'Gathering frames...'
+    requestAnimationFrame(() => {
+      makeGif(
+        initState, updateFunc, drawFunc, 1000 / 60,
+        progressHandler,
+        finishedHandler
+      )
+    })
+  })
 })
 
 // Start the preview animation

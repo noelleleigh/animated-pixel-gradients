@@ -1,3 +1,23 @@
+main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.ui-block {
+  border: solid 1px black;
+  border-radius: 5px;
+  padding: 0.5em;
+  margin: 0.5em;
+}
+
+@media (max-width: 600px) {
+  .ui-block {
+    width: 100%;
+  }
+}
+
 h1 {
   font-family: sans-serif;
 }
@@ -14,6 +34,22 @@ form .input-group {
   margin-bottom: 1em;
 }
 
-form#form input[type="submit"] {
+form .input-group label:not(.label-radio) {
+  display: block;
+}
+
+form input[type="number"] {
+  width: 75px;
+  font-size: 24px;
+  font-family: monospace;
+}
+
+form input[type="submit"] {
   font-size: 18px;
+}
+
+form #input-canvas-text {
+  font-size: 18px;
+  font-family: monospace;
+  width: 250px;
 }
