@@ -4,7 +4,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const common = {
   devtool: 'source-map',
-  stats: 'minimal',
+  stats: {
+    all: false,
+    timings: true,
+    modules: true,
+    maxModules: 0,
+    warnings: true,
+    errors: true,
+    errorDetails: true
+  },
   module: {
     rules: [
       {
