@@ -101,7 +101,9 @@ buttonRenderGif.addEventListener('click', (event) => {
   const finishedHandler = (blob) => {
     const downloadLink = document.createElement('a')
     downloadLink.href = URL.createObjectURL(blob)
-    downloadLink.download = 'gradient'
+    // Make filename safe
+    const filename = document.getElementById('input-canvas-text').value.replace(/[\\/:*?<>| ]/g, '')
+    downloadLink.download = filename
     const sizeMB = Number.parseFloat(blob.size / 1024 / 1024)
     downloadLink.textContent = `Click to download GIF (${sizeMB.toPrecision(3)} MB)`
     replaceElement(gifLinkContainer, gifLinkContainer.children[0], downloadLink)
