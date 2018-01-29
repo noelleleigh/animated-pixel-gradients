@@ -59,13 +59,6 @@ const labelGifRender = document.getElementById('gif-render-progress')
 const gifLinkContainer = document.getElementById('gif-link-container')
 
 // Setup event listeners
-// Disable double-tap-to-zoom on the buttons
-Array.from(document.querySelectorAll('#form input')).forEach((element) => {
-  element.addEventListener('touchend', (event) => {
-    event.preventDefault()
-    event.target.click()
-  })
-})
 
 // Allow tapping on inputs to focus them
 Array.from(document.querySelectorAll('form input[type="number"], form input[type="text"], form input[type="color"]'))
@@ -121,6 +114,11 @@ buttonRenderGif.addEventListener('click', (event) => {
       )
     })
   })
+})
+
+// Pause the preview animation when clicked
+container.addEventListener('click', (event) => {
+  MainLoop.isRunning() ? MainLoop.stop() : MainLoop.start()
 })
 
 // Start the preview animation
