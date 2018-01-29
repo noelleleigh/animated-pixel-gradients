@@ -2,9 +2,9 @@
 import './canvas-shadow.css'
 import './client.css'
 import MainLoop from 'mainloop.js'
-import makeGif from './makeGif'
-import {setupAnimationState, replaceElement, hexToRgb, formToJson} from './utils'
-import {createState, updateGenerator, drawGenerator} from './animatedGradientFuncs'
+import makeGif from './makeGif.js'
+import {setupAnimationState, replaceElement, hexToRgb, formToJson} from './utils.js'
+import {createState, updateGenerator, drawGenerator} from './animatedGradientFuncs.js'
 
 /**
  * Take the contents of an HTMLFormElement and return a object suitable for use as options for

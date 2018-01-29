@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import {DIRECTION} from './constants'
+import {DIRECTION} from './constants.js'
 
 // Get the position along a direction of an index of (width * height * 4)
 /**
