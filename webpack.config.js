@@ -75,7 +75,7 @@ const sandbox = Object.assign({}, common, {
 })
 
 const configs = [main]
-if (process.env.PRODUCTION === undefined) {
+if (process.env.DEVELOPMENT !== undefined) {
   configs.push(sandbox)
 }
 module.exports = configs
