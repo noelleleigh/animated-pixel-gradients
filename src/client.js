@@ -67,6 +67,15 @@ Array.from(document.querySelectorAll('#form input')).forEach((element) => {
   })
 })
 
+// Allow tapping on inputs to focus them
+Array.from(document.querySelectorAll('form input[type="number"], form input[type="text"], form input[type="color"]'))
+  .forEach((element) => {
+    element.addEventListener('touchend', (event) => {
+      event.target.focus()
+      event.target.select()
+    })
+  })
+
 // Create preview animation
 form.addEventListener('submit', (event) => {
   event.preventDefault()
