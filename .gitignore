@@ -60,5 +60,11 @@ typings/
 # Visual Studio Code
 .vscode
 
+# build-if-changed cache dir
+.buildifchanged
+
 # My build directory
 build
+
+# Notes file
+notes.txt

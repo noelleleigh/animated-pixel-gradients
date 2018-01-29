@@ -4,7 +4,8 @@
   "description": "Make pixelated gradient GIFs with words",
   "main": "server.js",
   "scripts": {
-    "build": "webpack",
+    "webpack": "webpack",
+    "build": "build-if-changed",
     "serve": "node ./server.js",
     "start": "npm run build && npm run serve",
     "lint": "eslint .",
@@ -21,6 +22,7 @@
     "mainloop.js": "^1.0.4"
   },
   "devDependencies": {
+    "build-if-changed": "^0.1.2",
     "clean-webpack-plugin": "^0.1.17",
     "css-loader": "^0.28.9",
     "eslint": "^4.16.0",
