@@ -1,15 +1,23 @@
 /* eslint-env browser */
 import './font-face.css'
 import {DIRECTION} from './constants'
-import {create2dContext} from './utils'
+import {create2dContext, rgbToHex, getNextIndex} from './utils'
 import {drawNoisyGradient, scaleImageData, fillImageData} from './drawFuncs'
 
 /**
  * Return an object with the following properties:
  *
- *   - `canvas`: HTMLCanvasElement(width, height)
+ *   - `canvasBackground`: HTMLCanvasElement for the background rendering
  *
- *   - `ctx`: CanvasRenderingContext2D from canvas
+ *   - `ctxBackground`: CanvasRenderingContext2D for `canvasBackground`
+ *
+ *   - `canvasForeground`: HTMLCanvasElement for the foreground rendering
+ *
+ *   - `ctxForeground`: CanvasRenderingContext2D for `canvasForeground`
+ *
+ *   - `canvasFinal`: HTMLCanvasElement for the final compositing
+ *
+ *   - `ctxFinal`: CanvasRenderingContext2D for `canvasFinal`
  *
  *   - `scalingFactor`: The magnitude by which the scaledImageData should be shrunk
  *
@@ -32,19 +40,26 @@ import {drawNoisyGradient, scaleImageData, fillImageData} from './drawFuncs'
  * @param {Object} Options to populate the state
  */
 const createState = ({width, height, scalingFactor, colors, gradientDirection, text}) => {
-  const {canvas, ctx} = create2dContext(width, height)
+  const {canvas: canvasBackground, ctx: ctxBackground} = create2dContext(width, height)
+  const {canvas: canvasForeground, ctx: ctxForeground} = create2dContext(width, height)
+  const {canvas: canvasFinal, ctx: ctxFinal} = create2dContext(width, height)
   const scaledImageData = new ImageData(width / scalingFactor, height / scalingFactor)
   // Fill imageData with second color if available
-  fillImageData(scaledImageData, colors[colors.length > 1 ? 1 : 0])
+  // fillImageData(scaledImageData, colors[colors.length > 1 ? 1 : 0])
   return {
-    canvas: canvas,
-    ctx: ctx,
+    canvasBackground: canvasBackground,
+    ctxBackground: ctxBackground,
+    canvasForeground: canvasForeground,
+    ctxForeground: ctxForeground,
+    canvasFinal: canvasFinal,
+    ctxFinal: ctxFinal,
     scalingFactor: scalingFactor,
     fullSizeImageData: new ImageData(width, height),
     scaledImageData: scaledImageData,
     progress: 0.0,
     gradientColors: colors,
     gradientColorIndex: 0,
+    colorChanged: false,
     gradientDirection: DIRECTION[gradientDirection],
     gradientWidth: 0.5,
     text: text
@@ -70,10 +85,94 @@ const updateGenerator = (stateTarget) => {
       stateTarget.progress = newProgress
     }
     // Update color index
-    stateTarget.gradientColorIndex = Math.floor(stateTarget.progress * stateTarget.gradientColors.length)
+    const newColorIndex = Math.floor(stateTarget.progress * stateTarget.gradientColors.length)
+    if (newColorIndex !== stateTarget.gradientColorIndex) {
+      stateTarget.gradientColorIndex = newColorIndex
+      // Put up a flag that draw() will put down
+      stateTarget.colorChanged = true
+    }
   }
 
   return update
+}
+
+/**
+ * Draws text in center of `ctx` in 32px Visitor font with `color`
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {String} text
+ * @param {String} color - Color in hex format
+ */
+const drawText = (ctx, text, color) => {
+  ctx.save()
+
+  ctx.font = '32px "Visitor", monospace'
+  ctx.fillStyle = color
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText(text, ctx.canvas.width / 2, ctx.canvas.height / 2)
+
+  ctx.restore()
+}
+
+/**
+ * Fill `state.ctxBackground` with a solid rectagle in the next color, with text from `state.text`
+ * drawn in the middle in the current color.
+ * @param {Object} state
+ */
+const drawBackground = (state) => {
+  state.ctxBackground.save()
+
+  // Get colors
+  const backgroundColor = state.gradientColors[getNextIndex(state.gradientColorIndex, state.gradientColors)]
+  const backgroundTextColor = state.gradientColors[state.gradientColorIndex]
+
+  state.ctxBackground.fillStyle = rgbToHex(...backgroundColor)
+  state.ctxBackground.fillRect(0, 0, state.canvasBackground.width, state.canvasBackground.height)
+  drawText(state.ctxBackground, state.text, rgbToHex(...backgroundTextColor))
+
+  state.ctxBackground.restore()
+}
+
+/**
+ * Draw a pixelated gradient in the current color onto `state.scaledImageData`, scale it up into
+ * `state.scaledImageData`, and composite some text on top.
+ * @param {Object} state
+ */
+const drawForeground = (state) => {
+  state.ctxForeground.save()
+
+  // Draw the gradient
+  const progressXColors = state.progress * state.gradientColors.length
+  const colorProgress = progressXColors - Math.floor(progressXColors)
+  drawNoisyGradient(
+    state.scaledImageData,
+    state.gradientColors[state.gradientColorIndex],
+    state.gradientWidth,
+    (colorProgress * (1 + state.gradientWidth)) - state.gradientWidth,
+    state.gradientDirection
+  )
+
+  // Scale up ImageData if necessary
+  if (state.scalingFactor === 1) {
+    state.ctxForeground.putImageData(state.scaledImageData, 0, 0)
+  } else {
+    scaleImageData(
+      state.scaledImageData,
+      state.fullSizeImageData,
+      state.scalingFactor
+    )
+    state.ctxForeground.putImageData(state.fullSizeImageData, 0, 0)
+  }
+
+  // Set composition settings
+  state.ctxForeground.globalCompositeOperation = 'source-atop'
+
+  // Draw text
+  // Get next color for text
+  const foregroundTextColor = state.gradientColors[getNextIndex(state.gradientColorIndex, state.gradientColors)]
+  drawText(state.ctxForeground, state.text, rgbToHex(...foregroundTextColor))
+
+  state.ctxForeground.restore()
 }
 
 /**
@@ -82,35 +181,16 @@ const updateGenerator = (stateTarget) => {
  */
 const drawGenerator = (stateTarget) => {
   const draw = () => {
-    const ctx = stateTarget.ctx
-    const progressXColors = stateTarget.progress * stateTarget.gradientColors.length
-    const colorProgress = progressXColors - Math.floor(progressXColors)
-    drawNoisyGradient(
-      stateTarget.scaledImageData,
-      stateTarget.gradientColors[stateTarget.gradientColorIndex],
-      stateTarget.gradientWidth,
-      (colorProgress * (1 + stateTarget.gradientWidth)) - stateTarget.gradientWidth,
-      stateTarget.gradientDirection
-    )
-    if (stateTarget.scalingFactor === 1) {
-      ctx.putImageData(stateTarget.scaledImageData, 0, 0)
-    } else {
-      scaleImageData(
-        stateTarget.scaledImageData,
-        stateTarget.fullSizeImageData,
-        stateTarget.scalingFactor
-      )
-      ctx.putImageData(stateTarget.fullSizeImageData, 0, 0)
+    // Blank out stateTarget.scaledImageData if the active color changed since the last frame
+    if (stateTarget.colorChanged) {
+      fillImageData(stateTarget.scaledImageData, [0, 0, 0, 0])
+      stateTarget.colorChanged = false
     }
+    drawBackground(stateTarget)
+    drawForeground(stateTarget)
 
-    const oldCompOp = ctx.globalCompositeOperation
-    ctx.globalCompositeOperation = 'difference'
-    ctx.fillStyle = '#fff'
-    ctx.font = '32px "Visitor"'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillText(stateTarget.text, ctx.canvas.width / 2, ctx.canvas.height / 2)
-    ctx.globalCompositeOperation = oldCompOp
+    stateTarget.ctxFinal.drawImage(stateTarget.canvasBackground, 0, 0)
+    stateTarget.ctxFinal.drawImage(stateTarget.canvasForeground, 0, 0)
   }
 
   return draw

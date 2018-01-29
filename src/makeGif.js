@@ -16,8 +16,8 @@ import 'gif.js/dist/gif.worker'
 const makeGif = (state, updateFunc, drawFunc, frameDelay, progressHandler, callback) => {
   const gif = new GIF({
     repeat: 0,
-    width: state.canvas.width,
-    height: state.canvas.height,
+    width: state.canvasFinal.width,
+    height: state.canvasFinal.height,
     workers: 4
   })
   gif.on('progress', progressHandler)
@@ -29,7 +29,8 @@ const makeGif = (state, updateFunc, drawFunc, frameDelay, progressHandler, callb
     previousProgress = state.progress
     updateFunc(frameDelay)
     drawFunc()
-    gif.addFrame(state.ctx, {copy: true, delay: frameDelay})
+    // gif.addFrame(state.ctx, {copy: true, delay: frameDelay})
+    gif.addFrame(state.ctxFinal, {copy: true, delay: frameDelay})
   }
   gif.render()
 }
