@@ -4,10 +4,11 @@
 const process = require('process')
 const path = require('path')
 const express = require('express')
+const helmet = require('helmet')
 const app = express()
 require('dotenv').config()
 
-// http://expressjs.com/en/starter/static-files.html
+app.use(helmet())
 app.use(express.static('build'))
 
 // Website endpoint
