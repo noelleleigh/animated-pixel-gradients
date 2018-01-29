@@ -165,6 +165,7 @@ const drawForeground = (state) => {
   }
 
   // Set composition settings
+  // For technique: https://stackoverflow.com/a/18387192/9165387
   state.ctxForeground.globalCompositeOperation = 'source-atop'
 
   // Draw text
