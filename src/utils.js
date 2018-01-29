@@ -65,6 +65,17 @@ const hexToRgb = (hex) => {
   }
 }
 
+/**
+ * Convert R, G, and B ints to a hex representation.
+ * Source: https://stackoverflow.com/a/5624139/9165387
+ * @param {Number} r
+ * @param {Number} g
+ * @param {Number} b
+ */
+const rgbToHex = (r, g, b) => {
+  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+}
+
 // Return the values of a form DOM object as a JS object
 /**
  * Return the values of a `HTMLFormElement` as an object keyed by name.
@@ -91,10 +102,25 @@ const formToJson = function formToJson (form) {
   return result
 }
 
+/**
+ * Given an `index` of an `array`, return the next valid index, wrapping to `0` at the end.
+ * @param {Number} index
+ * @param {Array} array
+ */
+const getNextIndex = (index, array) => {
+  if (index >= array.length - 1) {
+    return 0
+  } else {
+    return index + 1
+  }
+}
+
 export {
   create2dContext,
   replaceElement,
   setupAnimationState,
   hexToRgb,
-  formToJson
+  rgbToHex,
+  formToJson,
+  getNextIndex
 }
