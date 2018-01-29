@@ -71,10 +71,13 @@ const getLengthFromDirection = (width, height, direction) => {
  * @param {Number} opacity
  */
 const colorPixel = (data, index, color, opacity = 255) => {
+  if (color[3] !== undefined) {
+    opacity = color[3]
+  }
   data[index] = color[0]
   data[index + 1] = color[1]
   data[index + 2] = color[2]
-  data[index + 3] = color[3] || opacity
+  data[index + 3] = opacity
 }
 
 /**
@@ -111,15 +114,19 @@ const drawNoisyGradient = (imageData, color, transitionLength, transitionStartPo
     const gradientDirPos = getPosition(imageDataWidth, imageDataHeight, i, direction)
     const gradientDirPosNormalized = gradientDirPos / getLengthFromDirection(imageDataWidth, imageDataHeight, direction)
 
-    if (gradientDirPosNormalized >= transitionStartPoint) {
-      // Draw gradient
+    if (gradientDirPosNormalized < transitionStartPoint) {
+      // Before transition: draw solid color
+      colorPixel(data, i, color)
+    } else if (gradientDirPosNormalized >= transitionStartPoint &&
+               gradientDirPosNormalized < transitionStartPoint + transitionLength) {
+      // Within transition: conditionally color
       const transitionPos = Math.abs(gradientDirPosNormalized - transitionStartPoint) / transitionLength
       if (Math.random() >= transitionPos) {
         colorPixel(data, i, color)
       }
     } else {
-      // Draw solid color
-      colorPixel(data, i, color)
+      // Beyond gradient: do nothing
+      continue
     }
   }
   return imageData
