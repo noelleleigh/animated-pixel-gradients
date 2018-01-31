@@ -50,11 +50,43 @@ const createPreviewAnimation = (form, containerElement) => {
   MainLoop.setUpdate(updateFunc).setDraw(drawFunc).start()
 }
 
+/**
+ * Save the contents of `form` to `sessionStorage` in name:value pairs
+ * @param {HTMLFormElement} form
+ */
+const saveFormContents = (form) => {
+  const formData = new FormData(form)
+  for (let pair of formData.entries()) {
+    const [name, value] = pair
+    sessionStorage.setItem(name, value)
+  }
+}
+
+/**
+ * Populate the values of inputs in `form` by name from sessionStorage
+ * @param {HTMLFormElement} form
+ */
+const loadFormContents = (form) => {
+  const inputNames = Array.from(new FormData(form).keys())
+  inputNames.forEach((name) => {
+    const value = sessionStorage.getItem(name)
+    if (value) {
+      const element = form.querySelector(`[name="${name}"]`)
+      if (element.type === 'radio') {
+        form.querySelector(`[name="${name}"][value="${value}"]`).checked = true
+      } else {
+        element.value = value
+      }
+    }
+  })
+}
+
 // EXECUTION
 // Get our DOM elements
 const container = document.getElementById('canvas-container')
 const form = document.getElementById('form')
 const buttonRenderGif = document.getElementById('button-gif-render')
+const gifContainer = document.getElementById('gif-container')
 const labelGifRender = document.getElementById('gif-render-progress')
 const gifLinkContainer = document.getElementById('gif-link-container')
 
@@ -72,6 +104,7 @@ Array.from(document.querySelectorAll('form input[type="number"], form input[type
 // Create preview animation
 form.addEventListener('submit', (event) => {
   event.preventDefault()
+  saveFormContents(event.target)
   createPreviewAnimation(event.target, container)
 })
 
@@ -99,11 +132,12 @@ buttonRenderGif.addEventListener('click', (event) => {
     downloadLink.download = filename
     const sizeMB = Number.parseFloat(blob.size / 1024 / 1024)
     downloadLink.textContent = `Click to download GIF (${sizeMB.toPrecision(3)} MB)`
-    replaceElement(gifLinkContainer, gifLinkContainer.children[0], downloadLink)
+    gifLinkContainer.appendChild(downloadLink)
   }
 
   // Update GIF rendering message then create the GIF
   requestAnimationFrame(() => {
+    gifContainer.style.display = 'block'
     gifLinkContainer.innerHTML = ''
     labelGifRender.textContent = 'Gathering frames...'
     requestAnimationFrame(() => {
@@ -120,6 +154,14 @@ buttonRenderGif.addEventListener('click', (event) => {
 container.addEventListener('click', (event) => {
   MainLoop.isRunning() ? MainLoop.stop() : MainLoop.start()
 })
+
+// Run on page load
+
+// Hide the GIF container at the start
+gifContainer.style.display = 'none'
+
+// Load form contents from sessionStorage if available
+loadFormContents(form)
 
 // Start the preview animation
 form.querySelector('[type="submit"]').click()
