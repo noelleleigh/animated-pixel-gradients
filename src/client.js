@@ -55,8 +55,8 @@ const createPreviewAnimation = (form, containerElement) => {
  * @param {HTMLFormElement} form
  */
 const saveFormContents = (form) => {
-  const formData = new FormData(form)
-  for (let pair of formData.entries()) {
+  const formData = formToJson(form)
+  for (let pair of Object.entries(formData)) {
     const [name, value] = pair
     sessionStorage.setItem(name, value)
   }
@@ -67,7 +67,7 @@ const saveFormContents = (form) => {
  * @param {HTMLFormElement} form
  */
 const loadFormContents = (form) => {
-  const inputNames = Array.from(new FormData(form).keys())
+  const inputNames = Array.from(Object.keys(formToJson(form)))
   inputNames.forEach((name) => {
     const value = sessionStorage.getItem(name)
     if (value) {
