@@ -3,7 +3,7 @@ import './canvas-shadow.css'
 import './client.css'
 import MainLoop from 'mainloop.js'
 import makeGif from './makeGif.js'
-import {setupAnimationState, replaceElement, hexToRgb, formToJson} from './utils.js'
+import {setupAnimationState, replaceElement, hexToRgb, formToJson, storageAvailable} from './utils.js'
 import {createState, updateGenerator, drawGenerator} from './animatedGradientFuncs.js'
 
 /**
@@ -104,7 +104,9 @@ Array.from(document.querySelectorAll('form input[type="number"], form input[type
 // Create preview animation
 form.addEventListener('submit', (event) => {
   event.preventDefault()
-  saveFormContents(event.target)
+  if (storageAvailable('sessionStorage')) {
+    saveFormContents(event.target)
+  }
   createPreviewAnimation(event.target, container)
 })
 
@@ -161,7 +163,9 @@ container.addEventListener('click', (event) => {
 gifContainer.style.display = 'none'
 
 // Load form contents from sessionStorage if available
-loadFormContents(form)
+if (storageAvailable('sessionStorage')) {
+  loadFormContents(form)
+}
 
 // Start the preview animation
 form.querySelector('[type="submit"]').click()
