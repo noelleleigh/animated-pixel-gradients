@@ -1,3 +1,24 @@
+:root {
+  --background-color: #222;
+  --text-color: #ddd;
+  --link-color: #fff;
+  --link-color-visited: #999;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 1.2em;
+}
+
+a {
+  color: var(--link-color);
+}
+
+a:visited {
+  color: var(--link-color-visited);
+}
+
 main {
   display: flex;
   flex-wrap: wrap;
@@ -6,16 +27,24 @@ main {
 }
 
 .ui-block {
-  border: solid 1px black;
+  border: solid 1px var(--text-color);
   border-radius: 5px;
   padding: 0.8em;
   margin: 0.5em;
+}
+
+.ui-block :last-child {
+  margin-bottom: 0;
 }
 
 @media (max-width: 600px) {
   .ui-block {
     width: 100%;
   }
+}
+
+canvas {
+  image-rendering: pixelated;
 }
 
 header {
@@ -38,14 +67,29 @@ form .input-group {
   margin-bottom: 1em;
 }
 
+form .input-group-inline {
+  display: inline-block;
+  margin-right: 1em;
+  margin-bottom: 0;
+}
+
 form .input-group label:not(.label-radio) {
   display: block;
+  margin-bottom: 5px;
 }
 
 form input[type="number"] {
   width: 75px;
   font-size: 24px;
   font-family: monospace;
+}
+
+form input[type="number"], form input[type="text"] {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: solid 1px var(--text-color);
+  border-radius: 5px;
+  padding: 5px;
 }
 
 form input[type="submit"] {
