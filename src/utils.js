@@ -144,6 +144,9 @@ const storageAvailable = (type) => {
   }
 }
 
+/**
+ * Test for browser support of `<input type="color">`.
+ */
 const testInputColorSupport = () => {
   const input = document.createElement('input')
   input.setAttribute('type', 'color')
