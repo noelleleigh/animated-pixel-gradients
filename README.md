@@ -1,11 +1,11 @@
 # animated-pixel-gradients
 Make pixelated gradient GIFs with words on them!
 
-![Screenshot of app running](./readme_assets/screenshot.png)
+![Screenshot of app running](https://cdn.rawgit.com/noahleigh/animated-pixel-gradients/09eacf75/readme_assets/screenshot.png)
 
 **Example GIF**
 
-![Sample GIF with a purple and green gradient with the word "GRADIENT" in the middle](./readme_assets/sample_gif.gif)
+![Sample GIF with a purple and green gradient with the word "GRADIENT" in the middle](https://cdn.rawgit.com/noahleigh/animated-pixel-gradients/09eacf75/readme_assets/sample_gif.gif)
 
 [Live version on Glitch 🎏](https://animated-pixel-gradients.glitch.me/)
 
