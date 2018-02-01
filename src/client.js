@@ -34,7 +34,8 @@ const transformFormToStateOptions = (form) => {
     scalingFactor: formResults.scalingFactor,
     colors: [formResults.gradientColor1, formResults.gradientColor2].map(hexToRgb),
     gradientDirection: formResults.gradientDirection,
-    text: formResults.canvasText
+    text: formResults.canvasText,
+    fontSize: formResults.canvasFontSize
   }
 }
 

@@ -38,7 +38,7 @@ import {drawNoisyGradient, scaleImageData, fillImageData} from './drawFuncs'
 
  * @param {Object} Options to populate the state
  */
-const createState = ({width, height, scalingFactor, colors, gradientDirection, text, font}) => {
+const createState = ({width, height, scalingFactor, colors, gradientDirection, text, font, fontSize}) => {
   const {canvas: canvasBackground, ctx: ctxBackground} = create2dContext(width, height)
   const {canvas: canvasForeground, ctx: ctxForeground} = create2dContext(width, height)
   const {canvas: canvasFinal, ctx: ctxFinal} = create2dContext(width, height)
@@ -62,7 +62,8 @@ const createState = ({width, height, scalingFactor, colors, gradientDirection, t
     gradientDirection: DIRECTION[gradientDirection],
     gradientWidth: 0.5,
     text: text,
-    font: font
+    font: font,
+    fontSize: fontSize
   }
 }
 
@@ -102,8 +103,7 @@ const updateGenerator = (stateTarget) => {
  * @param {String} text
  * @param {String} color - Color in hex format
  */
-const drawText = (ctx, text, font, color) => {
-  const fontSize = 30
+const drawText = (ctx, text, font, fontSize, color) => {
   const textWidth = font.getAdvanceWidth(text, fontSize)
   const textHeight = fontSize / 2
   const startX = Math.round((ctx.canvas.width - textWidth) / 2)
@@ -127,7 +127,7 @@ const drawBackground = (state) => {
 
   state.ctxBackground.fillStyle = rgbToHex(...backgroundColor)
   state.ctxBackground.fillRect(0, 0, state.canvasBackground.width, state.canvasBackground.height)
-  drawText(state.ctxBackground, state.text, state.font, rgbToHex(...backgroundTextColor))
+  drawText(state.ctxBackground, state.text, state.font, state.fontSize, rgbToHex(...backgroundTextColor))
 
   state.ctxBackground.restore()
 }
@@ -170,7 +170,7 @@ const drawForeground = (state) => {
   // Draw text
   // Get next color for text
   const foregroundTextColor = state.gradientColors[getNextIndex(state.gradientColorIndex, state.gradientColors)]
-  drawText(state.ctxForeground, state.text, state.font, rgbToHex(...foregroundTextColor))
+  drawText(state.ctxForeground, state.text, state.font, state.fontSize, rgbToHex(...foregroundTextColor))
 
   state.ctxForeground.restore()
 }
