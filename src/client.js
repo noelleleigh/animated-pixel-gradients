@@ -3,7 +3,10 @@ import './canvas-shadow.css'
 import './client.css'
 import MainLoop from 'mainloop.js'
 import makeGif from './makeGif.js'
-import {setupAnimationState, replaceElement, hexToRgb, formToJson, storageAvailable} from './utils.js'
+import {
+  setupAnimationState, replaceElement,
+  hexToRgb, formToJson, storageAvailable,
+  testInputColorSupport} from './utils.js'
 import {createState, updateGenerator, drawGenerator} from './animatedGradientFuncs.js'
 import {makeColorPicker} from './colorPicker'
 
@@ -179,7 +182,9 @@ gifContainer.style.display = 'none'
 if (storageAvailable('sessionStorage')) {
   loadFormContents(form)
 }
-setupColorPickers(form)
+if (!testInputColorSupport()) {
+  setupColorPickers(form)
+}
 
 // Start the preview animation
 form.querySelector('[type="submit"]').click()

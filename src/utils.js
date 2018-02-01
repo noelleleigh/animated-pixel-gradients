@@ -144,6 +144,12 @@ const storageAvailable = (type) => {
   }
 }
 
+const testInputColorSupport = () => {
+  const input = document.createElement('input')
+  input.setAttribute('type', 'color')
+  return input.type !== 'text'
+}
+
 export {
   create2dContext,
   replaceElement,
@@ -152,5 +158,6 @@ export {
   rgbToHex,
   formToJson,
   getNextIndex,
-  storageAvailable
+  storageAvailable,
+  testInputColorSupport
 }
