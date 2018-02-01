@@ -57,8 +57,8 @@
             <input type="text" name="canvasText" id="input-canvas-text" value="G R A D I E N T">
           </div>
           <div class="input-group">
-            <label for="input-canvas-font-size">Font Size</label>
-            <input type="number" name="canvasFontSize" id="input-canvas-font-size" value="40" min="10" step="10">
+            <label for="input-canvas-font-size">Font Size (multiples of 10 work best)</label>
+            <input type="number" name="canvasFontSize" id="input-canvas-font-size" value="40" min="10" step="1" pattern="\d*">
           </div>
           <div class="input-group">
               <div class="input-group-inline">
@@ -71,7 +71,7 @@
               </div>
           </div>
           <div class="input-group">
-            <input type="submit" value="Preview">
+            <input type="submit" value="Update Preview">
             <input type="button" id="button-gif-render" value="Render as GIF">
           </div>
         </form>
