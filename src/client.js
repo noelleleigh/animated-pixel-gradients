@@ -5,6 +5,7 @@ import MainLoop from 'mainloop.js'
 import makeGif from './makeGif.js'
 import {setupAnimationState, replaceElement, hexToRgb, formToJson, storageAvailable} from './utils.js'
 import {createState, updateGenerator, drawGenerator} from './animatedGradientFuncs.js'
+import {makeColorPicker} from './colorPicker'
 
 /**
  * Take the contents of an HTMLFormElement and return a object suitable for use as options for
@@ -79,6 +80,18 @@ const loadFormContents = (form) => {
       }
     }
   })
+}
+
+
+const setupColorPickers = (form) => {
+  Array.from(form.querySelectorAll('input[type="color"]'))
+    .forEach((element) => {
+      makeColorPicker(element, {
+        change: (color) => {
+          element.value = color.toHexString()
+        }
+      })
+    })
 }
 
 // EXECUTION
@@ -166,6 +179,7 @@ gifContainer.style.display = 'none'
 if (storageAvailable('sessionStorage')) {
   loadFormContents(form)
 }
+setupColorPickers(form)
 
 // Start the preview animation
 form.querySelector('[type="submit"]').click()
