@@ -1,6 +1,8 @@
 /* eslint-env browser */
 import './canvas-shadow.css'
 import './client.css'
+import visitorFont from './assets/visitor1.ttf'
+import * as opentype from 'opentype.js'
 import MainLoop from 'mainloop.js'
 import makeGif from './makeGif.js'
 import {
@@ -42,8 +44,9 @@ const transformFormToStateOptions = (form) => {
  * @param {HTMLFormElement} form - Source of the configuration data for the animation
  * @param {HTMLElement} containerElement - Container element for the canvas
  */
-const createPreviewAnimation = (form, containerElement) => {
+const createPreviewAnimation = (form, font, containerElement) => {
   const stateOptions = transformFormToStateOptions(form)
+  stateOptions.font = font
   const {
     initState,
     updateFunc,
@@ -128,7 +131,13 @@ form.addEventListener('submit', (event) => {
   if (storageAvailable('sessionStorage')) {
     saveFormContents(event.target)
   }
-  createPreviewAnimation(event.target, container)
+  opentype.load(visitorFont, (err, font) => {
+    if (err) {
+      console.error(`Font "${visitorFont}" unable to be loaded: ${err}`)
+    } else {
+      createPreviewAnimation(event.target, font, container)
+    }
+  })
 })
 
 // Render GIF file and add a download link

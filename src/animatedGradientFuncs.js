@@ -1,5 +1,4 @@
 /* eslint-env browser */
-import './font-face.css'
 import {DIRECTION} from './constants'
 import {create2dContext, rgbToHex, getNextIndex} from './utils'
 import {drawNoisyGradient, scaleImageData, fillImageData} from './drawFuncs'
@@ -39,7 +38,7 @@ import {drawNoisyGradient, scaleImageData, fillImageData} from './drawFuncs'
 
  * @param {Object} Options to populate the state
  */
-const createState = ({width, height, scalingFactor, colors, gradientDirection, text}) => {
+const createState = ({width, height, scalingFactor, colors, gradientDirection, text, font}) => {
   const {canvas: canvasBackground, ctx: ctxBackground} = create2dContext(width, height)
   const {canvas: canvasForeground, ctx: ctxForeground} = create2dContext(width, height)
   const {canvas: canvasFinal, ctx: ctxFinal} = create2dContext(width, height)
@@ -62,7 +61,8 @@ const createState = ({width, height, scalingFactor, colors, gradientDirection, t
     colorChanged: false,
     gradientDirection: DIRECTION[gradientDirection],
     gradientWidth: 0.5,
-    text: text
+    text: text,
+    font: font
   }
 }
 
@@ -102,16 +102,15 @@ const updateGenerator = (stateTarget) => {
  * @param {String} text
  * @param {String} color - Color in hex format
  */
-const drawText = (ctx, text, color) => {
-  ctx.save()
-
-  ctx.font = '32px "Visitor", monospace'
-  ctx.fillStyle = color
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillText(text, ctx.canvas.width / 2, ctx.canvas.height / 2)
-
-  ctx.restore()
+const drawText = (ctx, text, font, color) => {
+  const fontSize = 30
+  const textWidth = font.getAdvanceWidth(text, fontSize)
+  const textHeight = fontSize / 2
+  const startX = Math.round((ctx.canvas.width - textWidth) / 2)
+  const startY = Math.round((ctx.canvas.height - textHeight) / 2) + textHeight
+  const path = font.getPath(text, startX, startY, fontSize)
+  path.fill = color
+  path.draw(ctx)
 }
 
 /**
@@ -128,7 +127,7 @@ const drawBackground = (state) => {
 
   state.ctxBackground.fillStyle = rgbToHex(...backgroundColor)
   state.ctxBackground.fillRect(0, 0, state.canvasBackground.width, state.canvasBackground.height)
-  drawText(state.ctxBackground, state.text, rgbToHex(...backgroundTextColor))
+  drawText(state.ctxBackground, state.text, state.font, rgbToHex(...backgroundTextColor))
 
   state.ctxBackground.restore()
 }
@@ -171,7 +170,7 @@ const drawForeground = (state) => {
   // Draw text
   // Get next color for text
   const foregroundTextColor = state.gradientColors[getNextIndex(state.gradientColorIndex, state.gradientColors)]
-  drawText(state.ctxForeground, state.text, rgbToHex(...foregroundTextColor))
+  drawText(state.ctxForeground, state.text, state.font, rgbToHex(...foregroundTextColor))
 
   state.ctxForeground.restore()
 }
