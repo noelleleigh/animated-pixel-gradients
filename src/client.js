@@ -85,7 +85,11 @@ const loadFormContents = (form) => {
   })
 }
 
-
+/**
+ * Add Spectrum color pickers to all the `<input type="color">` elements
+ * within a form.
+ * @param {HTMLFormElement} form
+ */
 const setupColorPickers = (form) => {
   Array.from(form.querySelectorAll('input[type="color"]'))
     .forEach((element) => {
