@@ -3,6 +3,7 @@ const path = require('path')
 const process = require('process')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 const common = {
   devtool: 'source-map',
@@ -44,7 +45,7 @@ const main = Object.assign({}, common, {
     client: './src/client.js'
   },
   output: {
-    filename: 'client.bundle.js',
+    filename: 'client.bundle.min.js',
     path: path.resolve(__dirname, 'build')
   },
   plugins: [
@@ -53,6 +54,10 @@ const main = Object.assign({}, common, {
       template: 'src/client.html',
       filename: 'client.html',
       favicon: 'src/assets/favicon.ico'
+    }),
+    new UglifyJSPlugin({
+      sourceMap: true,
+      parallel: true
     })
   ]
 })
