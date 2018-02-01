@@ -58,6 +58,47 @@ const createPreviewAnimation = (form, font, containerElement) => {
   MainLoop.setUpdate(updateFunc).setDraw(drawFunc).start()
 }
 
+const renderGifHandler = (form, font, progressElement, linkContainer) => {
+  const stateOptions = transformFormToStateOptions(form)
+  stateOptions.font = font
+  const {
+    initState,
+    updateFunc,
+    drawFunc
+  } = setupAnimationState(createState, updateGenerator, drawGenerator, stateOptions)
+
+  // Display the percentage progress
+  const progressHandler = (progress) => {
+    progressElement.textContent = `Combining frames: ${Math.floor(progress * 100)}%`
+  }
+
+  // Create a download link to the GIF
+  const finishedHandler = (blob) => {
+    const downloadLink = document.createElement('a')
+    downloadLink.href = URL.createObjectURL(blob)
+    // Make filename safe
+    const filename = document.getElementById('input-canvas-text').value.replace(/[\\/:*?<>|. ]/g, '')
+    downloadLink.download = filename
+    const sizeMB = Number.parseFloat(blob.size / 1024 / 1024)
+    downloadLink.textContent = `Click to download GIF (${sizeMB.toPrecision(3)} MB)`
+    linkContainer.appendChild(downloadLink)
+  }
+
+  // Update GIF rendering message then create the GIF
+  requestAnimationFrame(() => {
+    gifContainer.style.display = 'block'
+    linkContainer.innerHTML = ''
+    progressElement.textContent = 'Gathering frames...'
+    requestAnimationFrame(() => {
+      makeGif(
+        initState, updateFunc, drawFunc, 1000 / 60,
+        progressHandler,
+        finishedHandler
+      )
+    })
+  })
+}
+
 /**
  * Save the contents of `form` to `sessionStorage` in name:value pairs
  * @param {HTMLFormElement} form
@@ -144,42 +185,12 @@ form.addEventListener('submit', (event) => {
 // Render GIF file and add a download link
 buttonRenderGif.addEventListener('click', (event) => {
   event.preventDefault()
-  const stateOptions = transformFormToStateOptions(form)
-  const {
-    initState,
-    updateFunc,
-    drawFunc
-  } = setupAnimationState(createState, updateGenerator, drawGenerator, stateOptions)
-
-  // Display the percentage progress
-  const progressHandler = (progress) => {
-    labelGifRender.textContent = `Combining frames: ${Math.floor(progress * 100)}%`
-  }
-
-  // Create a download link to the GIF
-  const finishedHandler = (blob) => {
-    const downloadLink = document.createElement('a')
-    downloadLink.href = URL.createObjectURL(blob)
-    // Make filename safe
-    const filename = document.getElementById('input-canvas-text').value.replace(/[\\/:*?<>| ]/g, '')
-    downloadLink.download = filename
-    const sizeMB = Number.parseFloat(blob.size / 1024 / 1024)
-    downloadLink.textContent = `Click to download GIF (${sizeMB.toPrecision(3)} MB)`
-    gifLinkContainer.appendChild(downloadLink)
-  }
-
-  // Update GIF rendering message then create the GIF
-  requestAnimationFrame(() => {
-    gifContainer.style.display = 'block'
-    gifLinkContainer.innerHTML = ''
-    labelGifRender.textContent = 'Gathering frames...'
-    requestAnimationFrame(() => {
-      makeGif(
-        initState, updateFunc, drawFunc, 1000 / 60,
-        progressHandler,
-        finishedHandler
-      )
-    })
+  opentype.load(visitorFont, (err, font) => {
+    if (err) {
+      console.error(`Font "${visitorFont}" unable to be loaded: ${err}`)
+    } else {
+      renderGifHandler(form, font, labelGifRender, gifLinkContainer)
+    }
   })
 })
 
