@@ -94,6 +94,7 @@ const setupColorPickers = (form) => {
   Array.from(form.querySelectorAll('input[type="color"]'))
     .forEach((element) => {
       makeColorPicker(element, {
+        showInput: true,
         change: (color) => {
           element.value = color.toHexString()
         }
