@@ -5,6 +5,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
+const isDev = process.env.DEVELOPMENT !== undefined
+
 const common = {
   devtool: 'source-map',
   stats: {
@@ -45,7 +47,7 @@ const main = Object.assign({}, common, {
     client: './src/client.js'
   },
   output: {
-    filename: 'client.bundle.min.js',
+    filename: `client.bundle${isDev ? '' : '.min'}.js`,
     path: path.resolve(__dirname, 'build')
   },
   plugins: [
@@ -54,10 +56,6 @@ const main = Object.assign({}, common, {
       template: 'src/client.html',
       filename: 'client.html',
       favicon: 'src/assets/favicon.ico'
-    }),
-    new UglifyJSPlugin({
-      sourceMap: true,
-      parallel: true
     })
   ]
 })
@@ -80,7 +78,21 @@ const sandbox = Object.assign({}, common, {
 })
 
 const configs = [main]
-if (process.env.DEVELOPMENT !== undefined) {
+if (isDev) {
+  // In development...
   configs.push(sandbox)
+} else {
+  // In not development...
+  configs[0].plugins.push(
+    new UglifyJSPlugin({
+      sourceMap: true,
+      parallel: true,
+      uglifyOptions: {
+        compress: {
+          inline: 1
+        }
+      }
+    })
+  )
 }
 module.exports = configs
