@@ -1,4 +1,9 @@
+/** @module constants */
+
 // Direction constants
+/**
+ * Represents directions as integers
+ */
 const DIRECTION = {
   DOWN: 1,
   UP: 2,

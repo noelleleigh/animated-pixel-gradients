@@ -1,4 +1,5 @@
 /* eslint-env browser */
+/** @module client */
 import './canvas-shadow.css'
 import './client.css'
 import visitorFont from './assets/visitor1.ttf'
@@ -9,7 +10,7 @@ import {
   setupAnimationState, replaceElement,
   hexToRgb, formToJson, storageAvailable,
   testInputColorSupport} from './utils.js'
-import {createState, updateGenerator, drawGenerator} from './animatedGradientFuncs.js'
+import {createState, updateFactory, drawFactory} from './animatedGradientFuncs.js'
 import {makeColorPicker} from './colorPicker'
 
 /**
@@ -24,7 +25,8 @@ import {makeColorPicker} from './colorPicker'
  *   - `gradientColor2`
  *   - `gradientDirection`
  *   - `canvasText`
- * @param {HTMLFormElement} form
+ * @param {HTMLFormElement} form - Form from which to get the data
+ * @returns {Object} Options object for passing into `createState`
  */
 const transformFormToStateOptions = (form) => {
   const formResults = formToJson(form)
@@ -40,32 +42,38 @@ const transformFormToStateOptions = (form) => {
 }
 
 /**
- * Convenience function to take the contents of an HTMLFormElement and use them to configure
- * a canvas animation that is appended as a child of `containerElement` and started.
+ * Convenience function to take the contents `form` and use them to configure
+ * a canvas animation that is appended as a child of `containerElement` (replacing the existing
+ * child) and started.
  * @param {HTMLFormElement} form - Source of the configuration data for the animation
+ * @param {opentype.Font} font - Font that will be used for the animation
  * @param {HTMLElement} containerElement - Container element for the canvas
  */
 const createPreviewAnimation = (form, font, containerElement) => {
   const stateOptions = transformFormToStateOptions(form)
   stateOptions.font = font
-  const {
-    initState,
-    updateFunc,
-    drawFunc
-  } = setupAnimationState(createState, updateGenerator, drawGenerator, stateOptions)
+  const { initState, updateFunc, drawFunc } = setupAnimationState(
+    createState, updateFactory, drawFactory, stateOptions
+  )
   replaceElement(containerElement, containerElement.children[0], initState.canvasFinal)
 
   MainLoop.setUpdate(updateFunc).setDraw(drawFunc).start()
 }
 
+/**
+ * Convenience function to take the contents of `form` and use them to configure
+ * some animation functions that are used to generate an animated GIF.
+ * @param {HTMLFormElement} form - Source of the configuration data for the animation
+ * @param {opentype.Font} font - Font that will be used for the animation
+ * @param {Node} progressElement - DOM node to hold the progress report as the GIF is created
+ * @param {Element} linkContainer - Document element to hold the link to the completed GIF
+ */
 const renderGifHandler = (form, font, progressElement, linkContainer) => {
   const stateOptions = transformFormToStateOptions(form)
   stateOptions.font = font
-  const {
-    initState,
-    updateFunc,
-    drawFunc
-  } = setupAnimationState(createState, updateGenerator, drawGenerator, stateOptions)
+  const { initState, updateFunc, drawFunc } = setupAnimationState(
+    createState, updateFactory, drawFactory, stateOptions
+  )
 
   // Display the percentage progress
   const progressHandler = (progress) => {
@@ -86,8 +94,8 @@ const renderGifHandler = (form, font, progressElement, linkContainer) => {
 
   // Update GIF rendering message then create the GIF
   requestAnimationFrame(() => {
-    gifContainer.style.display = 'block'
     linkContainer.innerHTML = ''
+    // linkContainer.style.display = 'block'
     progressElement.textContent = 'Gathering frames...'
     requestAnimationFrame(() => {
       makeGif(
@@ -100,8 +108,8 @@ const renderGifHandler = (form, font, progressElement, linkContainer) => {
 }
 
 /**
- * Save the contents of `form` to `sessionStorage` in name:value pairs
- * @param {HTMLFormElement} form
+ * Save the contents of `form` to `sessionStorage` in `name: value` pairs.
+ * @param {HTMLFormElement} form - Form whose values you wish to store in `sessionStorage`
  */
 const saveFormContents = (form) => {
   const formData = formToJson(form)
@@ -112,8 +120,8 @@ const saveFormContents = (form) => {
 }
 
 /**
- * Populate the values of inputs in `form` by name from sessionStorage
- * @param {HTMLFormElement} form
+ * Populate the values of inputs in `form` by name from `sessionStorage`.
+ * @param {HTMLFormElement} form - Form whose values you wish to retrieve from `sessionStorage`
  */
 const loadFormContents = (form) => {
   const inputNames = Array.from(Object.keys(formToJson(form)))
@@ -131,9 +139,8 @@ const loadFormContents = (form) => {
 }
 
 /**
- * Add Spectrum color pickers to all the `<input type="color">` elements
- * within a form.
- * @param {HTMLFormElement} form
+ * Add Spectrum color pickers to all the `<input type="color">` elements within a form.
+ * @param {HTMLFormElement} form - Form whose color inputs you want to have Spectrum color pickers
  */
 const setupColorPickers = (form) => {
   Array.from(form.querySelectorAll('input[type="color"]'))
@@ -147,70 +154,75 @@ const setupColorPickers = (form) => {
     })
 }
 
-// EXECUTION
-// Get our DOM elements
-const container = document.getElementById('canvas-container')
-const form = document.getElementById('form')
-const buttonRenderGif = document.getElementById('button-gif-render')
-const gifContainer = document.getElementById('gif-container')
-const labelGifRender = document.getElementById('gif-render-progress')
-const gifLinkContainer = document.getElementById('gif-link-container')
+/**
+ * Set up the event listeners, load the settings, and start the first animation
+ */
+const init = () => {
+  // EXECUTION
+  // Get our DOM elements
+  const container = document.getElementById('canvas-container')
+  const form = document.getElementById('form')
+  const buttonRenderGif = document.getElementById('button-gif-render')
+  const gifContainer = document.getElementById('gif-container')
+  const labelGifRender = document.getElementById('gif-render-progress')
+  const gifLinkContainer = document.getElementById('gif-link-container')
 
-// Setup event listeners
+  // Setup event listeners
 
-// Allow tapping on inputs to focus them
-Array.from(document.querySelectorAll('form input[type="number"], form input[type="text"], form input[type="color"]'))
-  .forEach((element) => {
-    element.addEventListener('touchend', (event) => {
-      event.target.focus()
-      event.target.select()
+  // Allow tapping on inputs to focus them on mobile
+  Array.from(document.querySelectorAll('form input[type="number"], form input[type="text"], form input[type="color"]'))
+    .forEach((element) => {
+      element.addEventListener('touchend', (event) => {
+        event.target.focus()
+        event.target.select()
+      })
+    })
+
+  // When the form is submitted, create preview animation
+  form.addEventListener('submit', (event) => {
+    event.preventDefault()
+    if (storageAvailable('sessionStorage')) {
+      saveFormContents(event.target)
+    }
+    opentype.load(visitorFont, (err, font) => {
+      if (err) {
+        console.error(`Font "${visitorFont}" unable to be loaded: ${err}`)
+      } else {
+        createPreviewAnimation(event.target, font, container)
+      }
     })
   })
 
-// Create preview animation
-form.addEventListener('submit', (event) => {
-  event.preventDefault()
+  // When the "Render as GIF" button is clicked, render GIF file and add a download link
+  buttonRenderGif.addEventListener('click', (event) => {
+    event.preventDefault()
+    opentype.load(visitorFont, (err, font) => {
+      if (err) {
+        console.error(`Font "${visitorFont}" unable to be loaded: ${err}`)
+      } else {
+        gifContainer.style.display = 'block'
+        renderGifHandler(form, font, labelGifRender, gifLinkContainer)
+      }
+    })
+  })
+
+  // Pause the preview animation when clicked
+  container.addEventListener('click', (event) => {
+    MainLoop.isRunning() ? MainLoop.stop() : MainLoop.start()
+  })
+
+  // Run on page load
+
+  // Load form contents from sessionStorage if available
   if (storageAvailable('sessionStorage')) {
-    saveFormContents(event.target)
+    loadFormContents(form)
   }
-  opentype.load(visitorFont, (err, font) => {
-    if (err) {
-      console.error(`Font "${visitorFont}" unable to be loaded: ${err}`)
-    } else {
-      createPreviewAnimation(event.target, font, container)
-    }
-  })
-})
+  if (!testInputColorSupport()) {
+    setupColorPickers(form)
+  }
 
-// Render GIF file and add a download link
-buttonRenderGif.addEventListener('click', (event) => {
-  event.preventDefault()
-  opentype.load(visitorFont, (err, font) => {
-    if (err) {
-      console.error(`Font "${visitorFont}" unable to be loaded: ${err}`)
-    } else {
-      renderGifHandler(form, font, labelGifRender, gifLinkContainer)
-    }
-  })
-})
-
-// Pause the preview animation when clicked
-container.addEventListener('click', (event) => {
-  MainLoop.isRunning() ? MainLoop.stop() : MainLoop.start()
-})
-
-// Run on page load
-
-// Hide the GIF container at the start
-gifContainer.style.display = 'none'
-
-// Load form contents from sessionStorage if available
-if (storageAvailable('sessionStorage')) {
-  loadFormContents(form)
-}
-if (!testInputColorSupport()) {
-  setupColorPickers(form)
+  // Start the preview animation
+  form.querySelector('[type="submit"]').click()
 }
 
-// Start the preview animation
-form.querySelector('[type="submit"]').click()
+init()
