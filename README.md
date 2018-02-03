@@ -1,7 +1,7 @@
 # animated-pixel-gradients
 Make pixelated gradient GIFs with words on them!
 
-![Screenshot of app running](https://cdn.rawgit.com/noahleigh/animated-pixel-gradients/244c28c0/readme_assets/screenshot.png)
+![Screenshot of app running](https://cdn.rawgit.com/noahleigh/animated-pixel-gradients/a7fd6c68/readme_assets/screenshot.png)
 
 **Example GIF**
 
