@@ -1,3 +1,9 @@
 {
-    "extends": "standard"
+    "extends": "standard",
+    "rules": {
+        "valid-jsdoc": ["error", {
+            "requireReturn": false,
+            "requireReturnDescription": false
+        }]
+    }
 }

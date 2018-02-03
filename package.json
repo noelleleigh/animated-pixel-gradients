@@ -10,7 +10,8 @@
     "start": "npm run build && npm run serve",
     "lint": "eslint .",
     "test": "npm run lint && echo \"No Node.js tests have been written\" && exit 1",
-    "test-browser": "http-server ./ -p 8081"
+    "test-browser": "http-server ./ -p 8081",
+    "build-docs": "jsdoc -d ./docs -c ./.jsdoc.config.json ./src ./README.md"
   },
   "author": "Noah Leigh",
   "license": "MIT",
@@ -37,6 +38,7 @@
     "file-loader": "^1.1.6",
     "html-webpack-plugin": "^2.30.1",
     "http-server": "^0.11.1",
+    "jsdoc": "^3.5.5",
     "source-map-loader": "^0.2.3",
     "style-loader": "^0.20.1",
     "uglifyjs-webpack-plugin": "^1.1.8",
