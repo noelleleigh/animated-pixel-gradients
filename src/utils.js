@@ -1,9 +1,17 @@
 /* eslint-env browser */
+/** @module utils */
+
+/**
+ * @typedef {Object} CanvasAndContext
+ * @property {HTMLCanvasElement} canvas
+ * @property {CanvasRenderingContext2D} ctx - The '2d' context for `canvas`
+ */
 
 /**
  * Return an `HTMLCanvasElement` and a `CanvasRenderingContext2D` associated with it.
  * @param {Number} width - Width of the canvas
  * @param {Number} height - Height of the canvas
+ * @returns {CanvasAndContext}
  */
 const create2dContext = (width, height) => {
   const canvas = document.createElement('canvas')
@@ -17,12 +25,13 @@ const create2dContext = (width, height) => {
 
 /**
  * Replace `oldElement` contained within `parent` with `newElement`.
- * @param {HTMLElement} parent
- * @param {HTMLElement} oldElement
- * @param {HTMLElement} newElement
+ * @param {Node} parent - The DOM node that will contain `newElement`
+ * @param {Node} oldElement - The DOM node that will be replaced by `newElement`
+ * @param {Node} newElement - The DOM node that will be placed in `parent`
+ * @returns {Node} newElement
  */
 const replaceElement = (parent, oldElement, newElement) => {
-  if (!document.body.contains(oldElement)) {
+  if (!parent.contains(oldElement)) {
     parent.appendChild(newElement)
     return
   }
@@ -32,17 +41,27 @@ const replaceElement = (parent, oldElement, newElement) => {
 }
 
 /**
- * Return the state of `stateGenerator(stateOptions)`, the function from `updateGenerator(state)`,
- * and the function from `drawGenerator(state)`.
- * @param {Function} stateGenerator
- * @param {Function} updateGenerator
- * @param {Function} drawGenerator
- * @param {Object} stateOptions
+ * @typedef {Object} AnimationParts
+ * @property {State} initState - Animation State with starting values
+ * @property {Function} updateFunc - Function that takes a single argument `delta` and updates the state
+ * @property {Function} drawFunc - Function that takes no arguments and draws using the state information
  */
-const setupAnimationState = (stateGenerator, updateGenerator, drawGenerator, stateOptions) => {
-  const state = stateGenerator(stateOptions)
-  const update = updateGenerator(state)
-  const draw = drawGenerator(state)
+
+/**
+ * Return:
+ *   - The state of `stateFactory(stateOptions)`
+ *   - The function from `updateFactory(state)`
+ *   - The function from `drawFactory(state)`
+ * @param {Function} stateFactory - A function that returns a State object
+ * @param {Function} updateFactory - A function that returns an update function
+ * @param {Function} drawFactory - A function that returns a draw function
+ * @param {Object} stateOptions - An object that `stateFactory` is called with
+ * @returns {AnimationParts} Object containing the results from the three factories
+ */
+const setupAnimationState = (stateFactory, updateFactory, drawFactory, stateOptions) => {
+  const state = stateFactory(stateOptions)
+  const update = updateFactory(state)
+  const draw = drawFactory(state)
 
   return {
     initState: state,
@@ -53,8 +72,13 @@ const setupAnimationState = (stateGenerator, updateGenerator, drawGenerator, sta
 
 /**
  * Convert a hex string representation of a color to a 3-Array of ints for RGB.
+ *
  * Source: https://stackoverflow.com/a/5624139/9165387
- * @param {String} hex
+ * @example
+ * // Returns [155, 255, 79]
+ * hexToRgb('#9bff4f')
+ * @param {String} hex - A color in hex format (e.g. "#9bff4f")
+ * @returns {Number[]} 3-array of integers representing `[R, G, B]`
  */
 const hexToRgb = (hex) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -67,19 +91,25 @@ const hexToRgb = (hex) => {
 
 /**
  * Convert R, G, and B ints to a hex representation.
+ *
  * Source: https://stackoverflow.com/a/5624139/9165387
- * @param {Number} r
- * @param {Number} g
- * @param {Number} b
+ * @example
+ * // Returns '#9bff4f'
+ * rgbToHex(155, 255, 79)
+ * @param {Number} r - Red channel
+ * @param {Number} g - Blue channel
+ * @param {Number} b - Red channel
+ * @returns {string} Hex color string
  */
 const rgbToHex = (r, g, b) => {
   return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
 }
 
-// Return the values of a form DOM object as a JS object
 /**
- * Return the values of a `HTMLFormElement` as an object keyed by name.
- * @param {HTMLFormElement} form
+ * Return the values of a `HTMLFormElement` as an object keyed by the `name` attributes of the
+ * `<input>` elements within it.
+ * @param {HTMLFormElement} form - The form to have its values extracted
+ * @returns {Object}
  */
 const formToJson = function formToJson (form) {
   const result = {}
@@ -104,8 +134,14 @@ const formToJson = function formToJson (form) {
 
 /**
  * Given an `index` of an `array`, return the next valid index, wrapping to `0` at the end.
- * @param {Number} index
- * @param {Array} array
+ * @example
+ * // Returns 1
+ * getNextIndex(0, [1, 2, 3])
+ * // Returns 0
+ * getNextIndex(2, [1, 2, 3])
+ * @param {Number} index - The current index of the array
+ * @param {Array} array - The array to retrieve the next valid index from
+ * @returns {Number}
  */
 const getNextIndex = (index, array) => {
   if (index >= array.length - 1) {
@@ -116,9 +152,11 @@ const getNextIndex = (index, array) => {
 }
 
 /**
- * Feature detection for the Web Storage API
+ * Feature detection for the Web Storage API.
+ *
  * Source: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API#Feature-detecting_localStorage
- * @param {String} type
+ * @param {String} type - The type of storage you want to check: 'localStorage' or 'sessionStorage'
+ * @returns {boolean}
  */
 const storageAvailable = (type) => {
   let storage = null
@@ -146,6 +184,9 @@ const storageAvailable = (type) => {
 
 /**
  * Test for browser support of `<input type="color">`.
+ *
+ * Source: http://diveinto.html5doctor.com/detect.html#input-types
+ * @returns {boolean}
  */
 const testInputColorSupport = () => {
   const input = document.createElement('input')

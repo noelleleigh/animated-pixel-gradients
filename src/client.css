@@ -101,3 +101,8 @@ form #input-canvas-text {
   font-family: monospace;
   width: 250px;
 }
+
+#gif-container {
+  /* Hide it initially */
+  display: none;
+}

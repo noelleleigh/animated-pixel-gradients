@@ -1,4 +1,5 @@
 /* eslint-env browser */
+/** @module drawFuncs */
 import {DIRECTION} from './constants.js'
 
 // Get the position along a direction of an index of (width * height * 4)
@@ -44,11 +45,11 @@ const getPosition = (width, height, i, direction) => {
  * getLengthFromDirection(4, 3, DIRECTION.DOWN)
  * // Returns 4
  * getLengthFromDirection(4, 3, DIRECTION.RIGHT)
- * // Returns 5
+ * // Returns 4
  * getLengthFromDirection(4, 3, DIRECTION.LEFT)
  * @param {Number} width - `width` property of the ImageData
  * @param {Number} height - `height` property of the ImageData
- * @param {Number} direction - One of the four properties of `DIRECTION`
+ * @param {Number} direction - One of the properties of `DIRECTION`
  * @returns {Number}
  */
 const getLengthFromDirection = (width, height, direction) => {
@@ -62,13 +63,13 @@ const getLengthFromDirection = (width, height, direction) => {
 }
 
 /**
- * Assign the four channels of a pixel in an `ImageData.data` array given the index of the red
+ * Assign the four channels of a pixel in an `data` array given the index of the red
  * channel using the `color` array. If `color.length` is 3, `opacity` will set the opacity,
- * otherwise `color[3]`.
- * @param {Uint8ClampedArray} data
- * @param {Number} index
- * @param {Number[]} color
- * @param {Number} opacity
+ * otherwise `color[3]` will.
+ * @param {Uint8ClampedArray} data - The data from the `data` property of an `ImageData`
+ * @param {Number} index - Index on `data`
+ * @param {Number[]} color - Array of 3 or 4 integers representing an RGB(A) color
+ * @param {Number} opacity - Specify the opacity separately if you want
  */
 const colorPixel = (data, index, color, opacity = 255) => {
   if (color[3] !== undefined) {
@@ -81,9 +82,10 @@ const colorPixel = (data, index, color, opacity = 255) => {
 }
 
 /**
- * Fill an ImageData array with a solid color
- * @param {ImageData} imageData
- * @param {Number[]} color
+ * Fill an ImageData array with a solid color.
+ * @param {ImageData} imageData - The `ImageData` you want to fill
+ * @param {Number[]} color - Array of 3 or 4 integers representing an RGB(A) color
+ * @returns {ImageData} Returns the modified `ImageData`
  */
 const fillImageData = (imageData, color) => {
   const imgDataData = imageData.data
@@ -102,7 +104,8 @@ const fillImageData = (imageData, color) => {
  * @param {Number} transitionLength - (float 0.0 - 1.0) What proportion of the grid will the transition occupy
  * @param {Number} transitionStartPoint - (float) The relative normalized position of the start of the
  * gradient transition (e.g. 0.5 will start from the center of the grid)
- * @param {Number} direction - One of the four properties of `DIRECTION` to determine the direction of fade for the gradient
+ * @param {Number} direction - One of the properties of `DIRECTION` to determine the direction of fade for the gradient
+ * @returns {ImageData} Returns the modified `ImageData`
  */
 const drawNoisyGradient = (imageData, color, transitionLength, transitionStartPoint, direction) => {
   const imageDataWidth = imageData.width
@@ -133,12 +136,13 @@ const drawNoisyGradient = (imageData, color, transitionLength, transitionStartPo
 }
 
 /**
- * Map the contents of a `sourceImageData` to a larger `destImageData` whose width and height `factor` times as
- * large as those of `sourceImageData` using nearest-neighbor scaling.
- * @param {ImageData} sourceImageData
- * @param {ImageData} destImageData
- * @param {Number} factor
- * @returns {ImageData} - destImageData
+ * Map the contents of a `sourceImageData` to a larger `destImageData` whose width and height are
+ * `factor` times as large as those of `sourceImageData` using nearest-neighbor scaling.
+ * @param {ImageData} sourceImageData - The source `ImageData`
+ * @param {ImageData} destImageData - The destination `ImageData`
+ * @param {Number} factor - The factor by which `destImageData`'s dimensions are greater than
+ * `sourceImageData`'s dimensions.
+ * @returns {ImageData} - The modified `destImageData`
  */
 const scaleImageData = (sourceImageData, destImageData, factor) => {
   const factor_ = factor

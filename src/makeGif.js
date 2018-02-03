@@ -1,4 +1,5 @@
 /* eslint-env browser */
+/** @module makeGif */
 import GIF from 'gif.js'
 import 'gif.js/dist/gif.worker'
 
