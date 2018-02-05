@@ -1,4 +1,4 @@
-/* eslint-env ndoe */
+/* eslint-env node */
 
 // init project
 const process = require('process')
