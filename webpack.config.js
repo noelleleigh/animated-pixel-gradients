@@ -4,13 +4,13 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
-// Use argv to detect which mode we're in
 module.exports = (env, argv) => {
   const config = {
     entry: {
       client: './src/client.js'
     },
     output: {
+      // Use argv to detect which mode we're in
       filename: `client.bundle${argv.mode === 'production' ? '.min' : ''}.js`,
       path: path.resolve(__dirname, 'build')
     },
