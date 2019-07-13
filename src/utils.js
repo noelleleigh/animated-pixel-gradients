@@ -182,18 +182,6 @@ const storageAvailable = (type) => {
   }
 }
 
-/**
- * Test for browser support of `<input type="color">`.
- *
- * Source: http://diveinto.html5doctor.com/detect.html#input-types
- * @returns {boolean}
- */
-const testInputColorSupport = () => {
-  const input = document.createElement('input')
-  input.setAttribute('type', 'color')
-  return input.type !== 'text'
-}
-
 export {
   create2dContext,
   replaceElement,
@@ -202,6 +190,5 @@ export {
   rgbToHex,
   formToJson,
   getNextIndex,
-  storageAvailable,
-  testInputColorSupport
+  storageAvailable
 }

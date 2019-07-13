@@ -8,10 +8,8 @@ import MainLoop from 'mainloop.js'
 import makeGif from './makeGif.js'
 import {
   setupAnimationState, replaceElement,
-  hexToRgb, formToJson, storageAvailable,
-  testInputColorSupport} from './utils.js'
+  hexToRgb, formToJson, storageAvailable } from './utils.js'
 import {createState, updateFactory, drawFactory} from './animatedGradientFuncs.js'
-import {makeColorPicker} from './colorPicker'
 
 /**
  * Take the contents of an HTMLFormElement and return a object suitable for use as options for
@@ -139,22 +137,6 @@ const loadFormContents = (form) => {
 }
 
 /**
- * Add Spectrum color pickers to all the `<input type="color">` elements within a form.
- * @param {HTMLFormElement} form - Form whose color inputs you want to have Spectrum color pickers
- */
-const setupColorPickers = (form) => {
-  Array.from(form.querySelectorAll('input[type="color"]'))
-    .forEach((element) => {
-      makeColorPicker(element, {
-        showInput: true,
-        change: (color) => {
-          element.value = color.toHexString()
-        }
-      })
-    })
-}
-
-/**
  * Set up the event listeners, load the settings, and start the first animation
  */
 const init = () => {
@@ -216,9 +198,6 @@ const init = () => {
   // Load form contents from sessionStorage if available
   if (storageAvailable('sessionStorage')) {
     loadFormContents(form)
-  }
-  if (!testInputColorSupport()) {
-    setupColorPickers(form)
   }
 
   // Start the preview animation
