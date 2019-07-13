@@ -1,6 +1,6 @@
 /* eslint-env browser */
 /** @module drawFuncs */
-import {DIRECTION} from './constants.js'
+import { DIRECTION } from './constants.js'
 
 // Get the position along a direction of an index of (width * height * 4)
 /**
@@ -154,14 +154,14 @@ const scaleImageData = (sourceImageData, destImageData, factor) => {
   const destData = destImageData.data
 
   let scaledPixelBaseIndex = 0
-  let color = new Uint8ClampedArray(4)
+  const color = new Uint8ClampedArray(4)
   for (let y = 0; y < heightScaled; y += 1) {
     // Manually set the scaled position on a new row because the scaled WxH may not be exactly the same as destImageData
     scaledPixelBaseIndex = destWidth * y * 4
     for (let x = 0; x < widthScaled; x += 1) {
       if (x % factor_ === 0) {
         // Get corresponding pixel color from original ImageData
-        let sourcePixelBaseIndex = 4 * ((sourceDataWidth * Math.floor(y / factor_)) + Math.floor(x / factor_))
+        const sourcePixelBaseIndex = 4 * ((sourceDataWidth * Math.floor(y / factor_)) + Math.floor(x / factor_))
         color[0] = imageDataData[sourcePixelBaseIndex]
         color[1] = imageDataData[sourcePixelBaseIndex + 1]
         color[2] = imageDataData[sourcePixelBaseIndex + 2]
@@ -174,4 +174,4 @@ const scaleImageData = (sourceImageData, destImageData, factor) => {
   return destImageData
 }
 
-export {scaleImageData, drawNoisyGradient, fillImageData, getPosition}
+export { scaleImageData, drawNoisyGradient, fillImageData, getPosition }

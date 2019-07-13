@@ -30,7 +30,7 @@ const makeGif = (state, updateFunc, drawFunc, frameDelay, progressHandler, callb
     previousProgress = state.progress
     updateFunc(frameDelay)
     drawFunc()
-    gif.addFrame(state.ctxFinal, {copy: true, delay: frameDelay})
+    gif.addFrame(state.ctxFinal, { copy: true, delay: frameDelay })
   }
   gif.render()
 }
