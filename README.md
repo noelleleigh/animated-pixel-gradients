@@ -31,3 +31,4 @@ Open `http://localhost:PORT/` in your browser with the port that it provided (e.
 
 ## To Do
 - Develop Twitter bot feature
+- Better support for pixel sizes that aren't factors of the canvas resolution
