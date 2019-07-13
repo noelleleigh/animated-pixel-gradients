@@ -61,8 +61,5 @@
   "homepage": "https://github.com/noahleigh/animated-pixel-gradients#readme",
   "directories": {
     "test": "test"
-  },
-  "engines": {
-    "node": "8.x"
   }
 }
