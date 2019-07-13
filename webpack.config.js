@@ -2,7 +2,7 @@ require('dotenv').config()
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = (env, argv) => {
   const config = {
@@ -23,6 +23,11 @@ module.exports = (env, argv) => {
       })
     ],
     devtool: 'source-map',
+    optimization: {
+      minimizer: [new TerserPlugin({
+        sourceMap: true
+      })]
+    },
     module: {
       rules: [
         {
@@ -47,17 +52,6 @@ module.exports = (env, argv) => {
     }
   }
   if (argv.mode === 'production') {
-    config.plugins.push(
-      new UglifyJSPlugin({
-        sourceMap: true,
-        parallel: true,
-        uglifyOptions: {
-          compress: {
-            inline: 1
-          }
-        }
-      })
-    )
   }
   return config
 }
