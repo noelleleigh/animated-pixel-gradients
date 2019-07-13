@@ -49,16 +49,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/noahleigh/animated-pixel-gradients.git"
+    "url": "git+https://github.com/noelleleigh/animated-pixel-gradients.git"
   },
   "keywords": [
     "pixel-art",
     "gif"
   ],
   "bugs": {
-    "url": "https://github.com/noahleigh/animated-pixel-gradients/issues"
+    "url": "https://github.com/noelleleigh/animated-pixel-gradients/issues"
   },
-  "homepage": "https://github.com/noahleigh/animated-pixel-gradients#readme",
+  "homepage": "https://github.com/noelleleigh/animated-pixel-gradients#readme",
   "directories": {
     "test": "test"
   }
