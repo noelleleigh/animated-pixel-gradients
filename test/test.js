@@ -1,5 +1,5 @@
-import {getPosition} from '../src/drawFuncs.js'
-import {DIRECTION} from '../src/constants.js'
+import { getPosition } from '../src/drawFuncs.js'
+import { DIRECTION } from '../src/constants.js'
 
 const testEq = (received, wanted, name) => {
   console.assert(received === wanted, `Test: ${name} \nWanted: ${wanted} \nReceived: ${received}`)

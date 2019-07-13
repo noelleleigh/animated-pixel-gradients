@@ -11,4 +11,4 @@ const DIRECTION = {
   LEFT: 4
 }
 
-export {DIRECTION}
+export { DIRECTION }

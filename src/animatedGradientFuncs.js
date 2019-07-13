@@ -1,8 +1,8 @@
 /* eslint-env browser */
 /** @module animatedGradientFuncs */
-import {DIRECTION} from './constants'
-import {create2dContext, rgbToHex, getNextIndex} from './utils'
-import {drawNoisyGradient, scaleImageData, fillImageData} from './drawFuncs'
+import { DIRECTION } from './constants'
+import { create2dContext, rgbToHex, getNextIndex } from './utils'
+import { drawNoisyGradient, scaleImageData, fillImageData } from './drawFuncs'
 
 /**
  * @typedef {Object} State
@@ -38,10 +38,10 @@ import {drawNoisyGradient, scaleImageData, fillImageData} from './drawFuncs'
  * @param {Number} options.fontSize - Value for `State.fontSize`
  * @returns {State} A state object
  */
-const createState = ({width, height, scalingFactor, colors, gradientDirection, text, font, fontSize}) => {
-  const {canvas: canvasBackground, ctx: ctxBackground} = create2dContext(width, height)
-  const {canvas: canvasForeground, ctx: ctxForeground} = create2dContext(width, height)
-  const {canvas: canvasFinal, ctx: ctxFinal} = create2dContext(width, height)
+const createState = ({ width, height, scalingFactor, colors, gradientDirection, text, font, fontSize }) => {
+  const { canvas: canvasBackground, ctx: ctxBackground } = create2dContext(width, height)
+  const { canvas: canvasForeground, ctx: ctxForeground } = create2dContext(width, height)
+  const { canvas: canvasFinal, ctx: ctxFinal } = create2dContext(width, height)
   const scaledImageData = new ImageData(width / scalingFactor, height / scalingFactor)
   return {
     canvasBackground: canvasBackground,

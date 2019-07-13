@@ -9,7 +9,7 @@ import makeGif from './makeGif.js'
 import {
   setupAnimationState, replaceElement,
   hexToRgb, formToJson, storageAvailable } from './utils.js'
-import {createState, updateFactory, drawFactory} from './animatedGradientFuncs.js'
+import { createState, updateFactory, drawFactory } from './animatedGradientFuncs.js'
 
 /**
  * Take the contents of an HTMLFormElement and return a object suitable for use as options for
@@ -111,7 +111,7 @@ const renderGifHandler = (form, font, progressElement, linkContainer) => {
  */
 const saveFormContents = (form) => {
   const formData = formToJson(form)
-  for (let pair of Object.entries(formData)) {
+  for (const pair of Object.entries(formData)) {
     const [name, value] = pair
     sessionStorage.setItem(name, value)
   }
