@@ -3,6 +3,7 @@ const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const SriPlugin = require('webpack-subresource-integrity')
 
 module.exports = (env, argv) => {
   const config = {
@@ -12,7 +13,8 @@ module.exports = (env, argv) => {
     output: {
       // Use argv to detect which mode we're in
       filename: `client.bundle${argv.mode === 'production' ? '.min' : ''}.js`,
-      path: path.resolve(__dirname, 'build')
+      path: path.resolve(__dirname, 'build'),
+      crossOriginLoading: 'anonymous'
     },
     plugins: [
       new CleanWebpackPlugin(),
@@ -20,6 +22,10 @@ module.exports = (env, argv) => {
         template: 'src/client.html',
         filename: 'client.html',
         favicon: 'src/assets/favicon.ico'
+      }),
+      new SriPlugin({
+        hashFuncNames: ['sha256', 'sha384'],
+        enabled: true
       })
     ],
     devtool: 'source-map',
