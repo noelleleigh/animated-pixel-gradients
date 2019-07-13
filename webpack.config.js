@@ -1,6 +1,6 @@
 require('dotenv').config()
 const path = require('path')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
@@ -15,7 +15,7 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, 'build')
     },
     plugins: [
-      new CleanWebpackPlugin(['build']),
+      new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         template: 'src/client.html',
         filename: 'client.html',
