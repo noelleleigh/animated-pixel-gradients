@@ -4,3 +4,4 @@ out: ./build/*
 ./src/*.css
 ./src/*.html
 ./src/assets/*
+webpack.config.js
