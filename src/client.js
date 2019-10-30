@@ -8,7 +8,8 @@ import MainLoop from 'mainloop.js'
 import makeGif from './makeGif.js'
 import {
   setupAnimationState, replaceElement,
-  hexToRgb, formToJson, storageAvailable } from './utils.js'
+  hexToRgb, formToJson, storageAvailable
+} from './utils.js'
 import { createState, updateFactory, drawFactory } from './animatedGradientFuncs.js'
 
 /**
