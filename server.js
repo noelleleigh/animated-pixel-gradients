@@ -8,7 +8,7 @@ const helmet = require('helmet')
 const app = express()
 require('dotenv').config()
 
-app.use(helmet({frameguard: false}))
+app.use(helmet({ frameguard: false }))
 app.use(express.static('build'))
 
 // Website endpoint
