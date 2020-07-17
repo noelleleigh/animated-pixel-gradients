@@ -12,7 +12,6 @@
     "start-dev": "npm run webpack-dev && npm run serve",
     "lint": "eslint .",
     "test": "npm run lint && echo \"No Node.js tests have been written\" && exit 1",
-    "test-browser": "http-server ./ -p 8081",
     "build-docs": "jsdoc -d ./docs -c ./.jsdoc.config.json ./src ./README.md"
   },
   "author": "Noelle Leigh",
@@ -37,7 +36,6 @@
     "eslint-plugin-standard": "^4.0.1",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^3.2.0",
-    "http-server": "^0.12.3",
     "jsdoc": "^3.6.3",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
