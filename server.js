@@ -26,6 +26,11 @@ const listener = app.listen(process.env.PORT, () => {
   const port = listener.address().port
   const domain = 'localhost'
   const host = `${domain}:${port}`
-  const message = `Your app is live http://${host}`
-  console.log(message)
+  const devMessage = `Your app is live at http://${host}`
+  const prodMessage = `Your app is listening on port ${port}`
+  console.log(
+    process.env.NODE_ENV === 'development'
+      ? devMessage
+      : prodMessage
+  )
 })
