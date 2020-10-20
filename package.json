@@ -17,7 +17,7 @@
   "author": "Noelle Leigh",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^8.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "gif.js": "^0.2.0",
     "helmet": "^3.21.2",
