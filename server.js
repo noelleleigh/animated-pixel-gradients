@@ -23,5 +23,14 @@ app.get(`/${process.env.tweetEndpoint}`, (request, response) => {
 
 // listen for requests
 const listener = app.listen(process.env.PORT, () => {
-  console.log('Your app is listening on port ' + listener.address().port)
+  const port = listener.address().port
+  const domain = 'localhost'
+  const host = `${domain}:${port}`
+  const devMessage = `Your app is live at http://${host}`
+  const prodMessage = `Your app is listening on port ${port}`
+  console.log(
+    process.env.NODE_ENV === 'development'
+      ? devMessage
+      : prodMessage
+  )
 })
