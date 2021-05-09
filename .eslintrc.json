@@ -14,11 +14,5 @@
     "parserOptions": {
         "ecmaVersion": 2018,
         "sourceType": "module"
-    },
-    "rules": {
-        "valid-jsdoc": ["error", {
-            "requireReturn": false,
-            "requireReturnDescription": false
-        }]
     }
 }
