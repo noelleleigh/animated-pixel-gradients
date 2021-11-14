@@ -1,8 +1,8 @@
 /* eslint-env browser */
 /** @module animatedGradientFuncs */
-import { DIRECTION } from './constants'
-import { create2dContext, rgbToHex, getNextIndex } from './utils'
-import { drawNoisyGradient, scaleImageData, fillImageData } from './drawFuncs'
+import { DIRECTION } from "./constants";
+import { create2dContext, rgbToHex, getNextIndex } from "./utils";
+import { drawNoisyGradient, scaleImageData, fillImageData } from "./drawFuncs";
 
 /**
  * @typedef {Object} State
@@ -38,11 +38,29 @@ import { drawNoisyGradient, scaleImageData, fillImageData } from './drawFuncs'
  * @param {Number} options.fontSize - Value for `State.fontSize`
  * @returns {State} A state object
  */
-const createState = ({ width, height, scalingFactor, colors, gradientDirection, text, font, fontSize }) => {
-  const { canvas: canvasBackground, ctx: ctxBackground } = create2dContext(width, height)
-  const { canvas: canvasForeground, ctx: ctxForeground } = create2dContext(width, height)
-  const { canvas: canvasFinal, ctx: ctxFinal } = create2dContext(width, height)
-  const scaledImageData = new ImageData(width / scalingFactor, height / scalingFactor)
+const createState = ({
+  width,
+  height,
+  scalingFactor,
+  colors,
+  gradientDirection,
+  text,
+  font,
+  fontSize,
+}) => {
+  const { canvas: canvasBackground, ctx: ctxBackground } = create2dContext(
+    width,
+    height
+  );
+  const { canvas: canvasForeground, ctx: ctxForeground } = create2dContext(
+    width,
+    height
+  );
+  const { canvas: canvasFinal, ctx: ctxFinal } = create2dContext(width, height);
+  const scaledImageData = new ImageData(
+    width / scalingFactor,
+    height / scalingFactor
+  );
   return {
     canvasBackground: canvasBackground,
     ctxBackground: ctxBackground,
@@ -61,9 +79,9 @@ const createState = ({ width, height, scalingFactor, colors, gradientDirection, 
     gradientWidth: 0.5,
     text: text,
     font: font,
-    fontSize: fontSize
-  }
-}
+    fontSize: fontSize,
+  };
+};
 
 /**
  * Return a function that takes a single float argument `delta` and modifies `stateTarget`
@@ -79,23 +97,26 @@ const createState = ({ width, height, scalingFactor, colors, gradientDirection, 
 const updateFactory = (stateTarget) => {
   const update = (delta) => {
     // Update progress variable
-    const newProgress = stateTarget.progress + (delta / (stateTarget.gradientColors.length * 2000))
+    const newProgress =
+      stateTarget.progress + delta / (stateTarget.gradientColors.length * 2000);
     if (newProgress > 1.0) {
-      stateTarget.progress = 0.0
+      stateTarget.progress = 0.0;
     } else {
-      stateTarget.progress = newProgress
+      stateTarget.progress = newProgress;
     }
     // Update color index
-    const newColorIndex = Math.floor(stateTarget.progress * stateTarget.gradientColors.length)
+    const newColorIndex = Math.floor(
+      stateTarget.progress * stateTarget.gradientColors.length
+    );
     if (newColorIndex !== stateTarget.gradientColorIndex) {
-      stateTarget.gradientColorIndex = newColorIndex
+      stateTarget.gradientColorIndex = newColorIndex;
       // Put up a flag that draw() will put down
-      stateTarget.colorChanged = true
+      stateTarget.colorChanged = true;
     }
-  }
+  };
 
-  return update
-}
+  return update;
+};
 
 /**
  * Draw text in the middle of a CanvasRenderingContext2D
@@ -106,14 +127,14 @@ const updateFactory = (stateTarget) => {
  * @param {String} color - Color in hex format
  */
 const drawText = (ctx, text, font, fontSize, color) => {
-  const textWidth = font.getAdvanceWidth(text, fontSize)
-  const textHeight = fontSize / 2
-  const startX = Math.round((ctx.canvas.width - textWidth) / 2)
-  const startY = Math.round((ctx.canvas.height - textHeight) / 2) + textHeight
-  const path = font.getPath(text, startX, startY, fontSize)
-  path.fill = color
-  path.draw(ctx)
-}
+  const textWidth = font.getAdvanceWidth(text, fontSize);
+  const textHeight = fontSize / 2;
+  const startX = Math.round((ctx.canvas.width - textWidth) / 2);
+  const startY = Math.round((ctx.canvas.height - textHeight) / 2) + textHeight;
+  const path = font.getPath(text, startX, startY, fontSize);
+  path.fill = color;
+  path.draw(ctx);
+};
 
 /**
  * Fill `state.ctxBackground` with a solid rectagle in the next color, with text from `state.text`
@@ -121,18 +142,32 @@ const drawText = (ctx, text, font, fontSize, color) => {
  * @param {State} state - State from which to get the drawing context
  */
 const drawBackground = (state) => {
-  state.ctxBackground.save()
+  state.ctxBackground.save();
 
   // Get colors
-  const backgroundColor = state.gradientColors[getNextIndex(state.gradientColorIndex, state.gradientColors)]
-  const backgroundTextColor = state.gradientColors[state.gradientColorIndex]
+  const backgroundColor =
+    state.gradientColors[
+      getNextIndex(state.gradientColorIndex, state.gradientColors)
+    ];
+  const backgroundTextColor = state.gradientColors[state.gradientColorIndex];
 
-  state.ctxBackground.fillStyle = rgbToHex(...backgroundColor)
-  state.ctxBackground.fillRect(0, 0, state.canvasBackground.width, state.canvasBackground.height)
-  drawText(state.ctxBackground, state.text, state.font, state.fontSize, rgbToHex(...backgroundTextColor))
+  state.ctxBackground.fillStyle = rgbToHex(...backgroundColor);
+  state.ctxBackground.fillRect(
+    0,
+    0,
+    state.canvasBackground.width,
+    state.canvasBackground.height
+  );
+  drawText(
+    state.ctxBackground,
+    state.text,
+    state.font,
+    state.fontSize,
+    rgbToHex(...backgroundTextColor)
+  );
 
-  state.ctxBackground.restore()
-}
+  state.ctxBackground.restore();
+};
 
 /**
  * Draw a pixelated gradient in the current color onto `state.scaledImageData`, scale it up into
@@ -140,42 +175,51 @@ const drawBackground = (state) => {
  * @param {State} state - State from which to get the drawing context
  */
 const drawForeground = (state) => {
-  state.ctxForeground.save()
+  state.ctxForeground.save();
 
   // Draw the gradient
-  const progressXColors = state.progress * state.gradientColors.length
-  const colorProgress = progressXColors - Math.floor(progressXColors)
+  const progressXColors = state.progress * state.gradientColors.length;
+  const colorProgress = progressXColors - Math.floor(progressXColors);
   drawNoisyGradient(
     state.scaledImageData,
     state.gradientColors[state.gradientColorIndex],
     state.gradientWidth,
-    (colorProgress * (1 + state.gradientWidth)) - state.gradientWidth,
+    colorProgress * (1 + state.gradientWidth) - state.gradientWidth,
     state.gradientDirection
-  )
+  );
 
   // Scale up ImageData if necessary
   if (state.scalingFactor === 1) {
-    state.ctxForeground.putImageData(state.scaledImageData, 0, 0)
+    state.ctxForeground.putImageData(state.scaledImageData, 0, 0);
   } else {
     scaleImageData(
       state.scaledImageData,
       state.fullSizeImageData,
       state.scalingFactor
-    )
-    state.ctxForeground.putImageData(state.fullSizeImageData, 0, 0)
+    );
+    state.ctxForeground.putImageData(state.fullSizeImageData, 0, 0);
   }
 
   // Set composition settings
   // For technique: https://stackoverflow.com/a/18387192/9165387
-  state.ctxForeground.globalCompositeOperation = 'source-atop'
+  state.ctxForeground.globalCompositeOperation = "source-atop";
 
   // Draw text
   // Get next color for text
-  const foregroundTextColor = state.gradientColors[getNextIndex(state.gradientColorIndex, state.gradientColors)]
-  drawText(state.ctxForeground, state.text, state.font, state.fontSize, rgbToHex(...foregroundTextColor))
+  const foregroundTextColor =
+    state.gradientColors[
+      getNextIndex(state.gradientColorIndex, state.gradientColors)
+    ];
+  drawText(
+    state.ctxForeground,
+    state.text,
+    state.font,
+    state.fontSize,
+    rgbToHex(...foregroundTextColor)
+  );
 
-  state.ctxForeground.restore()
-}
+  state.ctxForeground.restore();
+};
 
 /**
  * Return a function that takes no arguments and uses `drawBackground` and `drawForeground` to draw
@@ -187,21 +231,17 @@ const drawFactory = (stateTarget) => {
   const draw = () => {
     // Blank out stateTarget.scaledImageData if the active color changed since the last frame
     if (stateTarget.colorChanged) {
-      fillImageData(stateTarget.scaledImageData, [0, 0, 0, 0])
-      stateTarget.colorChanged = false
+      fillImageData(stateTarget.scaledImageData, [0, 0, 0, 0]);
+      stateTarget.colorChanged = false;
     }
-    drawBackground(stateTarget)
-    drawForeground(stateTarget)
+    drawBackground(stateTarget);
+    drawForeground(stateTarget);
 
-    stateTarget.ctxFinal.drawImage(stateTarget.canvasBackground, 0, 0)
-    stateTarget.ctxFinal.drawImage(stateTarget.canvasForeground, 0, 0)
-  }
+    stateTarget.ctxFinal.drawImage(stateTarget.canvasBackground, 0, 0);
+    stateTarget.ctxFinal.drawImage(stateTarget.canvasForeground, 0, 0);
+  };
 
-  return draw
-}
+  return draw;
+};
 
-export {
-  createState,
-  updateFactory,
-  drawFactory
-}
+export { createState, updateFactory, drawFactory };
