@@ -14,14 +14,14 @@
  * @returns {CanvasAndContext}
  */
 const create2dContext = (width, height) => {
-  const canvas = document.createElement('canvas')
-  canvas.width = width
-  canvas.height = height
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
   return {
     canvas: canvas,
-    ctx: canvas.getContext('2d')
-  }
-}
+    ctx: canvas.getContext("2d"),
+  };
+};
 
 /**
  * Replace `oldElement` contained within `parent` with `newElement`.
@@ -32,13 +32,13 @@ const create2dContext = (width, height) => {
  */
 const replaceElement = (parent, oldElement, newElement) => {
   if (!parent.contains(oldElement)) {
-    parent.appendChild(newElement)
-    return
+    parent.appendChild(newElement);
+    return;
   }
-  oldElement.remove()
-  parent.appendChild(newElement)
-  return newElement
-}
+  oldElement.remove();
+  parent.appendChild(newElement);
+  return newElement;
+};
 
 /**
  * @typedef {Object} AnimationParts
@@ -58,17 +58,22 @@ const replaceElement = (parent, oldElement, newElement) => {
  * @param {Object} stateOptions - An object that `stateFactory` is called with
  * @returns {AnimationParts} Object containing the results from the three factories
  */
-const setupAnimationState = (stateFactory, updateFactory, drawFactory, stateOptions) => {
-  const state = stateFactory(stateOptions)
-  const update = updateFactory(state)
-  const draw = drawFactory(state)
+const setupAnimationState = (
+  stateFactory,
+  updateFactory,
+  drawFactory,
+  stateOptions
+) => {
+  const state = stateFactory(stateOptions);
+  const update = updateFactory(state);
+  const draw = drawFactory(state);
 
   return {
     initState: state,
     updateFunc: update,
-    drawFunc: draw
-  }
-}
+    drawFunc: draw,
+  };
+};
 
 /**
  * Convert a hex string representation of a color to a 3-Array of ints for RGB.
@@ -81,13 +86,17 @@ const setupAnimationState = (stateFactory, updateFactory, drawFactory, stateOpti
  * @returns {Number[]} 3-array of integers representing `[R, G, B]`
  */
 const hexToRgb = (hex) => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (result) {
-    return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
+    return [
+      parseInt(result[1], 16),
+      parseInt(result[2], 16),
+      parseInt(result[3], 16),
+    ];
   } else {
-    throw new Error(`String "${hex}" is not a valid hexidecimal color`)
+    throw new Error(`String "${hex}" is not a valid hexidecimal color`);
   }
-}
+};
 
 /**
  * Convert R, G, and B ints to a hex representation.
@@ -102,8 +111,8 @@ const hexToRgb = (hex) => {
  * @returns {string} Hex color string
  */
 const rgbToHex = (r, g, b) => {
-  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
-}
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+};
 
 /**
  * Return the values of a `HTMLFormElement` as an object keyed by the `name` attributes of the
@@ -111,26 +120,26 @@ const rgbToHex = (r, g, b) => {
  * @param {HTMLFormElement} form - The form to have its values extracted
  * @returns {Object}
  */
-const formToJson = function formToJson (form) {
-  const result = {}
+const formToJson = function formToJson(form) {
+  const result = {};
   Array.from(form.elements)
-    .filter(elem => elem.tagName === 'INPUT' && elem.name !== '')
+    .filter((elem) => elem.tagName === "INPUT" && elem.name !== "")
     .forEach((elem) => {
-      if (elem.type === 'checkbox') {
-        result[elem.name] = elem.checked
-      } else if (elem.type === 'range' || elem.type === 'number') {
-        result[elem.name] = parseInt(elem.value, 10)
-      } else if (elem.type === 'radio') {
+      if (elem.type === "checkbox") {
+        result[elem.name] = elem.checked;
+      } else if (elem.type === "range" || elem.type === "number") {
+        result[elem.name] = parseInt(elem.value, 10);
+      } else if (elem.type === "radio") {
         if (elem.checked) {
-          result[elem.name] = elem.value
+          result[elem.name] = elem.value;
         }
       } else {
-        result[elem.name] = elem.value // eslint-disable-line prefer-destructuring
+        result[elem.name] = elem.value; // eslint-disable-line prefer-destructuring
       }
-    })
+    });
 
-  return result
-}
+  return result;
+};
 
 /**
  * Given an `index` of an `array`, return the next valid index, wrapping to `0` at the end.
@@ -145,11 +154,11 @@ const formToJson = function formToJson (form) {
  */
 const getNextIndex = (index, array) => {
   if (index >= array.length - 1) {
-    return 0
+    return 0;
   } else {
-    return index + 1
+    return index + 1;
   }
-}
+};
 
 /**
  * Feature detection for the Web Storage API.
@@ -159,28 +168,30 @@ const getNextIndex = (index, array) => {
  * @returns {boolean}
  */
 const storageAvailable = (type) => {
-  let storage = null
+  let storage = null;
   try {
-    storage = window[type]
-    const x = '__storage_test__'
-    storage.setItem(x, x)
-    storage.removeItem(x)
-    return true
+    storage = window[type];
+    const x = "__storage_test__";
+    storage.setItem(x, x);
+    storage.removeItem(x);
+    return true;
   } catch (e) {
-    return e instanceof DOMException && (
+    return (
+      e instanceof DOMException &&
       // everything except Firefox
-      e.code === 22 ||
-      // Firefox
-      e.code === 1014 ||
-      // test name field too, because code might not be present
-      // everything except Firefox
-      e.name === 'QuotaExceededError' ||
-      // Firefox
-      e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+      (e.code === 22 ||
+        // Firefox
+        e.code === 1014 ||
+        // test name field too, because code might not be present
+        // everything except Firefox
+        e.name === "QuotaExceededError" ||
+        // Firefox
+        e.name === "NS_ERROR_DOM_QUOTA_REACHED") &&
       // acknowledge QuotaExceededError only if there's something already stored
       storage.length !== 0
+    );
   }
-}
+};
 
 export {
   create2dContext,
@@ -190,5 +201,5 @@ export {
   rgbToHex,
   formToJson,
   getNextIndex,
-  storageAvailable
-}
+  storageAvailable,
+};

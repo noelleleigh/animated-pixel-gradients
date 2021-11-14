@@ -84,7 +84,8 @@ form input[type="number"] {
   font-family: monospace;
 }
 
-form input[type="number"], form input[type="text"] {
+form input[type="number"],
+form input[type="text"] {
   background-color: var(--background-color);
   color: var(--text-color);
   border: solid 1px var(--text-color);

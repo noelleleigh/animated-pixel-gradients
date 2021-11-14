@@ -2,9 +2,9 @@
 <html lang="en-US">
   <head>
     <title>Animated Pixel Gradients Maker</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
     <header>
@@ -16,63 +16,138 @@
           <div class="input-group">
             <div class="input-group-inline">
               <label for="input-canvas-width">Width (pixels)</label>
-              <input type="number" name="canvasWidth" id="input-canvas-width" value="400" min="1" pattern="\d*">
+              <input
+                type="number"
+                name="canvasWidth"
+                id="input-canvas-width"
+                value="400"
+                min="1"
+                pattern="\d*"
+              />
             </div>
             <div class="input-group-inline">
               <label for="input-canvas-height">Height (pixels)</label>
-              <input type="number" name="canvasHeight" id="input-canvas-height" value="300" min="1" pattern="\d*">
+              <input
+                type="number"
+                name="canvasHeight"
+                id="input-canvas-height"
+                value="300"
+                min="1"
+                pattern="\d*"
+              />
             </div>
           </div>
           <div class="input-group">
             <label for="input-scaling-factor">Gradient Pixel Size</label>
-            <input type="number" name="scalingFactor" id="input-scaling-factor" value="4" min="1" pattern="\d*">
+            <input
+              type="number"
+              name="scalingFactor"
+              id="input-scaling-factor"
+              value="4"
+              min="1"
+              pattern="\d*"
+            />
           </div>
           <div class="input-group">
             <label>Gradient Direction</label>
             <table>
               <tr>
                 <td>
-                    <input type="radio" name="gradientDirection" id="input-gradient-direction-1" value="RIGHT" checked>
-                    <label class="label-radio" for="input-gradient-direction-1">➡️ Right</label>
+                  <input
+                    type="radio"
+                    name="gradientDirection"
+                    id="input-gradient-direction-1"
+                    value="RIGHT"
+                    checked
+                  />
+                  <label class="label-radio" for="input-gradient-direction-1"
+                    >➡️ Right</label
+                  >
                 </td>
                 <td>
-                    <input type="radio" name="gradientDirection" id="input-gradient-direction-2" value="LEFT">
-                    <label class="label-radio" for="input-gradient-direction-2">⬅️ Left</label>
+                  <input
+                    type="radio"
+                    name="gradientDirection"
+                    id="input-gradient-direction-2"
+                    value="LEFT"
+                  />
+                  <label class="label-radio" for="input-gradient-direction-2"
+                    >⬅️ Left</label
+                  >
                 </td>
               </tr>
               <tr>
                 <td>
-                    <input type="radio" name="gradientDirection" id="input-gradient-direction-3" value="UP">
-                    <label class="label-radio" for="input-gradient-direction-3">⬆️ Up</label>
+                  <input
+                    type="radio"
+                    name="gradientDirection"
+                    id="input-gradient-direction-3"
+                    value="UP"
+                  />
+                  <label class="label-radio" for="input-gradient-direction-3"
+                    >⬆️ Up</label
+                  >
                 </td>
                 <td>
-                    <input type="radio" name="gradientDirection" id="input-gradient-direction-4" value="DOWN">
-                    <label class="label-radio" for="input-gradient-direction-4">⬇️ Down</label>
+                  <input
+                    type="radio"
+                    name="gradientDirection"
+                    id="input-gradient-direction-4"
+                    value="DOWN"
+                  />
+                  <label class="label-radio" for="input-gradient-direction-4"
+                    >⬇️ Down</label
+                  >
                 </td>
               </tr>
             </table>
           </div>
           <div class="input-group">
             <label for="input-canvas-text">Text</label>
-            <input type="text" name="canvasText" id="input-canvas-text" value="G R A D I E N T">
+            <input
+              type="text"
+              name="canvasText"
+              id="input-canvas-text"
+              value="G R A D I E N T"
+            />
           </div>
           <div class="input-group">
-            <label for="input-canvas-font-size">Font Size (multiples of 10 work best)</label>
-            <input type="number" name="canvasFontSize" id="input-canvas-font-size" value="40" min="10" step="1" pattern="\d*">
+            <label for="input-canvas-font-size"
+              >Font Size (multiples of 10 work best)</label
+            >
+            <input
+              type="number"
+              name="canvasFontSize"
+              id="input-canvas-font-size"
+              value="40"
+              min="10"
+              step="1"
+              pattern="\d*"
+            />
           </div>
           <div class="input-group">
-              <div class="input-group-inline">
-                <label for="input-gradient-color-1">Gradient Color 1</label>
-                <input type="color" name="gradientColor1" id="input-gradient-color-1" value="#9bff4f">
-              </div>
-              <div class="input-group-inline">
-                <label for="input-gradient-color-2">Gradient Color 2</label>
-                <input type="color" name="gradientColor2" id="input-gradient-color-2" value="#b429be">
-              </div>
+            <div class="input-group-inline">
+              <label for="input-gradient-color-1">Gradient Color 1</label>
+              <input
+                type="color"
+                name="gradientColor1"
+                id="input-gradient-color-1"
+                value="#9bff4f"
+              />
+            </div>
+            <div class="input-group-inline">
+              <label for="input-gradient-color-2">Gradient Color 2</label>
+              <input
+                type="color"
+                name="gradientColor2"
+                id="input-gradient-color-2"
+                value="#b429be"
+              />
+            </div>
           </div>
           <div class="input-group">
-            <input type="submit" value="Update Preview">
-            <input type="button" id="button-gif-render" value="Render as GIF">
+            <input type="submit" value="Update Preview" />
+            <input type="button" id="button-gif-render" value="Render as GIF" />
           </div>
         </form>
         <div id="gif-container">
@@ -88,16 +163,31 @@
       <p>Credits:</p>
       <ul>
         <li>Font: <a href="https://www.dafont.com/visitor.font">Visitor</a></li>
-        <li>Event Loop: <a href="https://github.com/IceCreamYou/MainLoop.js">MainLoop.js</a></li>
-        <li>GIF Library: <a href="https://github.com/jnordberg/gif.js">gif.js</a></li>
-        <li>Font Rendering: <a href="https://github.com/nodebox/opentype.js">opentype.js</a></li>
-        <li>Mobile Color Picker: <a href="https://github.com/bgrins/spectrum">spectrum</a></li>
+        <li>
+          Event Loop:
+          <a href="https://github.com/IceCreamYou/MainLoop.js">MainLoop.js</a>
+        </li>
+        <li>
+          GIF Library: <a href="https://github.com/jnordberg/gif.js">gif.js</a>
+        </li>
+        <li>
+          Font Rendering:
+          <a href="https://github.com/nodebox/opentype.js">opentype.js</a>
+        </li>
+        <li>
+          Mobile Color Picker:
+          <a href="https://github.com/bgrins/spectrum">spectrum</a>
+        </li>
       </ul>
       <p>
-        <a href="https://glitch.com/edit/#!/remix/animated-pixel-gradients">Remix on Glitch</a>
+        <a href="https://glitch.com/edit/#!/remix/animated-pixel-gradients"
+          >Remix on Glitch</a
+        >
       </p>
       <p>
-        <a href="https://github.com/noelleleigh/animated-pixel-gradients">Fork on Github</a>
+        <a href="https://github.com/noelleleigh/animated-pixel-gradients"
+          >Fork on Github</a
+        >
       </p>
     </footer>
   </body>

@@ -1,6 +1,6 @@
 /* eslint-env browser */
 /** @module makeGif */
-import GIF from 'gif.js'
+import GIF from "gif.js";
 
 /**
  * Using an inital `state` containing a `ctx` property pointing to a `CanvasRenderingContext2D`,
@@ -13,26 +13,33 @@ import GIF from 'gif.js'
  * @param {Function} progressHandler - Function that takes a `progress` float (0.0-1.0) to report the progress of the GIF rendering
  * @param {Function} callback - Function that takes a `Blob` to handle the GIF after rendering
  */
-const makeGif = (state, updateFunc, drawFunc, frameDelay, progressHandler, callback) => {
+const makeGif = (
+  state,
+  updateFunc,
+  drawFunc,
+  frameDelay,
+  progressHandler,
+  callback
+) => {
   const gif = new GIF({
     repeat: 0,
     width: state.canvasFinal.width,
     height: state.canvasFinal.height,
     workers: 4,
-    workerScript: new URL('gif.js/dist/gif.worker.js', import.meta.url)
-  })
-  gif.on('progress', progressHandler)
-  gif.on('finished', callback)
+    workerScript: new URL("gif.js/dist/gif.worker.js", import.meta.url),
+  });
+  gif.on("progress", progressHandler);
+  gif.on("finished", callback);
 
   // Keep adding frames until state.progress loops back to 0 (one full cycle)
-  let previousProgress = state.progress
+  let previousProgress = state.progress;
   while (previousProgress <= state.progress) {
-    previousProgress = state.progress
-    updateFunc(frameDelay)
-    drawFunc()
-    gif.addFrame(state.ctxFinal, { copy: true, delay: frameDelay })
+    previousProgress = state.progress;
+    updateFunc(frameDelay);
+    drawFunc();
+    gif.addFrame(state.ctxFinal, { copy: true, delay: frameDelay });
   }
-  gif.render()
-}
+  gif.render();
+};
 
-export default makeGif
+export default makeGif;
