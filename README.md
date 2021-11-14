@@ -33,7 +33,6 @@ Open `http://localhost:PORT/` in your browser with the port that it provided (e.
 - [MainLoop.js](https://github.com/IceCreamYou/MainLoop.js) - Runs the update-draw loop for the animation preview
 - [gif.js](https://github.com/jnordberg/gif.js) - Renders the GIF file
 - [opentype.js](https://github.com/nodebox/opentype.js) - Draws the text on the canvas
-- [spectrum](https://github.com/bgrins/spectrum) - Color picker for platforms that don't support `<input type="color">`
 
 ## To Do
 
