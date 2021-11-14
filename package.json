@@ -8,7 +8,9 @@
     "build:dev": "webpack --config webpack.dev.js",
     "serve": "node server.js",
     "start": "npm run build:prod && env NODE_ENV=production npm run serve",
-    "start:dev": "npm run build:dev && env NODE_ENV=development npm run serve"
+    "start:dev": "npm run build:dev && env NODE_ENV=development npm run serve",
+    "format": "prettier --write .",
+    "lint": "eslint ."
   },
   "author": "Noelle Leigh",
   "license": "MIT",
