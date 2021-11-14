@@ -1,7 +1,0 @@
-[npm run webpack]
-out: ./build/*
-./src/*.js
-./src/*.css
-./src/*.html
-./src/assets/*
-webpack.config.js

@@ -1,7 +1,6 @@
 /* eslint-env browser */
 /** @module makeGif */
 import GIF from 'gif.js'
-import 'gif.js/dist/gif.worker'
 
 /**
  * Using an inital `state` containing a `ctx` property pointing to a `CanvasRenderingContext2D`,
@@ -19,7 +18,8 @@ const makeGif = (state, updateFunc, drawFunc, frameDelay, progressHandler, callb
     repeat: 0,
     width: state.canvasFinal.width,
     height: state.canvasFinal.height,
-    workers: 4
+    workers: 4,
+    workerScript: new URL('gif.js/dist/gif.worker.js', import.meta.url)
   })
   gif.on('progress', progressHandler)
   gif.on('finished', callback)
