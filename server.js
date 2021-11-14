@@ -4,11 +4,9 @@
 const process = require('process')
 const path = require('path')
 const express = require('express')
-const helmet = require('helmet')
 const app = express()
 require('dotenv').config()
 
-app.use(helmet({ frameguard: false }))
 app.use(express.static('build'))
 
 // Website endpoint
