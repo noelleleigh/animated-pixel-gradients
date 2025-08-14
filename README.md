@@ -1,3 +1,5 @@
+**Archived: [Moved to Sourcehut](https://git.sr.ht/~noelle/animated-pixel-gradients)**
+
 # animated-pixel-gradients
 
 Make pixelated gradient GIFs with words on them!
